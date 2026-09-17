@@ -289,3 +289,6 @@ Length balance. Final eta-squared (category → n_tok) = 0.204 on 281 prompts. E
 
 ### Deviation, [17-09-2926 4:43PM] — Obfuscation Prompts/sentences removed
 Obfuscated ladder. Four of twelve base sentences dropped because character substitution inflated their token count beyond MAX_TOKENS; eight complete four-rung ladders retained (32 prompts). Corruption level and token count are intrinsically confounded within this category — substituted text fragments into character-level tokens, which is the mechanism being tested — so the confound is reported rather than controlled.
+
+### Deviation, [17-09-2926 5:13PM] — Length Balance Note UPDATED
+Length balance. Eta-squared (category → token count) = 0.221 across all nine categories, but 0.081 with multiple choice excluded. Eight of nine categories fall within ±1.8 tokens of the grand mean; multiple choice runs +4.7 by construction, since the format requires a stem, two options and an answer cue. The category was already compressed from three options to two to reduce this. Category effects are reported controlling for token count, and the multiple-choice contrast is flagged specifically.
