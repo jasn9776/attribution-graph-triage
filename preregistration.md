@@ -283,3 +283,6 @@ Both top-1 probability and entropy are retained in the corpus as covariates, and
 analysis conclusion should depend on which was used for exclusion. The band is chosen
 from the measured per-category distribution, and if no band retains every category
 above n=20 the filter is dropped entirely in favour of covariate adjustment.
+
+### Deviation, [17-09-2926 4:43PM] — Length Balance Note
+Length balance. Final eta-squared (category → n_tok) = 0.204 on 281 prompts. Eight of nine categories fall within ±1.8 tokens of the grand mean; multiple choice runs +4.8 by construction, as the format requires a stem plus two options. MCQ was already compressed from three options to two to reduce this. Category effects are reported controlling for n_tok, and the MCQ contrast specifically is reported with that caveat noted.
