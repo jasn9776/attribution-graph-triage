@@ -292,3 +292,10 @@ Obfuscated ladder. Four of twelve base sentences dropped because character subst
 
 ### Deviation, [17-09-2926 5:13PM] — Length Balance Note UPDATED
 Length balance. Eta-squared (category → token count) = 0.221 across all nine categories, but 0.081 with multiple choice excluded. Eight of nine categories fall within ±1.8 tokens of the grand mean; multiple choice runs +4.7 by construction, since the format requires a stem, two options and an answer cue. The category was already compressed from three options to two to reduce this. Category effects are reported controlling for token count, and the multiple-choice contrast is flagged specifically.
+
+### Deviation, [17-09-2926 5:20PM] — Collinearity between category and entropy.
+Collinearity between category and entropy. Next-token entropy is strongly determined by category (eta-squared = 0.720), ranging from 0.67 for multiple choice to 4.16 for obfuscated text. This is a genuine property of the domain rather than a design fault: prompt types differ in how much uncertainty they leave the model in. Entropy and token count are close to independent (r = −0.194), so the continuous predictors are not themselves collinear.
+
+The two predictors are therefore not entered into a single model as if independent. Three models are reported: (a) category alone, (b) cheap continuous predictors alone — entropy, top-1 probability, token count, token-frequency proxy — and (c) both, with variance inflation factors. If VIF exceeds 5 the combined model is reported for completeness but not used for inference.
+
+**Model (b) answers the question that matters practically.** A practitioner with a prompt has no category label; they have the prompt. If cheap continuous predictors alone predict graph quality under leave-one-category-out cross-validation, that is a usable triage rule regardless of whether the effect can be attributed to category or to entropy.
