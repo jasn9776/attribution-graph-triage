@@ -262,3 +262,24 @@ Append dated entries. Do not edit anything above.
 | Date | Deviation | Reason |
 |---|---|---|
 | | | |
+
+### Deviation, [17-09-2926] — filter switched from top-1 probability to next-token entropy
+
+On measuring the corpus, top-1 probability was found to capture *continuation*
+confidence rather than *answer* confidence on base-model prompts. The model completes
+"The capital of France is" with " a" (p=0.223), continuing the sentence rather than
+answering the implied question, and completes "{name} was born in the year" with a
+leading space (p≈0.84) for both known and unknown entities, since the discriminating
+token is one position further on.
+
+The filter's purpose is narrow: exclude prompts where the model is near-deterministic
+(no computation left to explain) or near-uniform (no coherent mechanism to find).
+Next-token entropy serves that purpose more robustly, since it uses the full
+distribution rather than a single point and is not distorted when mass splits across
+near-identical tokens.
+
+Entropy does not solve the answer-versus-continuation problem, and is not claimed to.
+Both top-1 probability and entropy are retained in the corpus as covariates, and no
+analysis conclusion should depend on which was used for exclusion. The band is chosen
+from the measured per-category distribution, and if no band retains every category
+above n=20 the filter is dropped entirely in favour of covariate adjustment.
