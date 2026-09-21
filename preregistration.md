@@ -299,3 +299,13 @@ Collinearity between category and entropy. Next-token entropy is strongly determ
 The two predictors are therefore not entered into a single model as if independent. Three models are reported: (a) category alone, (b) cheap continuous predictors alone — entropy, top-1 probability, token count, token-frequency proxy — and (c) both, with variance inflation factors. If VIF exceeds 5 the combined model is reported for completeness but not used for inference.
 
 **Model (b) answers the question that matters practically.** A practitioner with a prompt has no category label; they have the prompt. If cheap continuous predictors alone predict graph quality under leave-one-category-out cross-validation, that is a usable triage rule regardless of whether the effect can be attributed to category or to entropy.
+
+### day1_final notebook versions for packages and config (run on Kaggle notebook)  [21-09-2026 2:10PM]
+torch              2.10.0+cu128
+transformers       4.57.3
+transformer_lens   3.2.1
+circuit_tracer     0.5.0
+nnsight            0.7.0
+numpy              2.0.2
+scipy              1.16.3
+gpu                Tesla T4
