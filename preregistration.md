@@ -309,3 +309,75 @@ nnsight            0.7.0
 numpy              2.0.2
 scipy              1.16.3
 gpu                Tesla T4
+
+### Feature Cap raised to 32768 [21-09-2026 3:12PM]
+**Feature cap raised to 32768.** At 24576 the densest pilot prompt (induction, nonce bigrams) had 1,700 features of headroom. Nonce text fragments into many subword tokens and is the most feature-dense input in the corpus. Attribution time was measured to be independent of the cap (13.3s vs 13.4s at 16384 vs 24576), so raising it costs nothing and prevents induction prompts being rejected by the saturation guard.
+
+## SUMMARY of changes after debugging day1_final with claude [21-09-2026 3:23PM]
+Position summaries on interior positions only.\
+excluding BOS and the final token, because error there is structurally zero once the cap does not bind. Including them would inflate the Gini coefficient for reasons unrelated to the prompt.\
+Feature cap raised to 32768\
+Pruning curve replaced by node-count curve, library version on a 30-graph subsample\
+Metrics on GPU in float32, validated against float64 to 3×10⁻⁸
+
+Full version of changes:
+## Day 1 final — changes and deviations
+**21 September 2026, 15:23**
+
+Four changes made while finalising the Day 1 pipeline. Each alters how an outcome is
+measured, so each is recorded here rather than made silently.
+
+### 1. Position summaries computed on interior positions only
+
+**Change.** Position thirds, argmax and Gini are computed on positions 1 to n−2,
+excluding the BOS token and the final token.
+
+**Why.** Error at those two positions is structurally zero whenever the feature cap is
+not binding — a property of how circuit-tracer builds the graph, not of the prompt.
+Treating these guaranteed zeros as data inflates concentration measures, and by an
+amount that depends on prompt length: two zeros are a third of a 6-token profile but a
+tenth of a 20-token one. That would reintroduce the length confound the corpus design
+controls for. On a 6-token example, Gini falls from 0.49 to 0.23 when the structural
+zeros are excluded.
+
+**Evidence.** BOS and final-position error were exactly zero on all 12 pilot graphs,
+across all nine categories. Both are recorded for every corpus graph and verified to be
+zero before analysis.
+
+### 2. Feature cap raised from 24576 to 32768
+
+**Why.** Nonce text is the most feature-dense input in the corpus, because nonsense
+words fragment into many subword tokens. The densest pilot prompt (induction) had only
+1,700 features of headroom at 24576. A saturating graph is rejected by the saturation
+guard, so the risk was losing prompts from the category most likely to thin out.
+
+**Cost.** None measurable. Attribution time is independent of the cap (13.3 s vs 13.4 s
+at 16384 vs 24576); a graph only uses the features it needs.
+
+### 3. Pruning curve replaced by a node-count curve
+
+**Change.** Each corpus graph records the number of nodes needed to reach 95 / 90 / 80 /
+70 % of total logit influence. The library's `prune_graph` curve is computed on a
+stratified subsample of 30 graphs to measure agreement between the two.
+
+**Why.** `prune_graph` at four thresholds took 115 s of a 172 s per-graph total on a
+17-token prompt (67 %). The node-count curve is the node-threshold step of that
+algorithm, without edge pruning or orphan removal — a proxy, and reported as one.
+
+### 4. Metrics computed on GPU in float32
+
+**Change.** `graph_metrics_fast` replaces the float64 NumPy implementation for the
+corpus run. The NumPy version is retained as a reference.
+
+**Validation.** The two agree to within 3.45 × 10⁻⁸ on every reported quantity, on two
+graphs including the largest in the pilot — about three orders of magnitude below the
+run-to-run noise floor of 5 × 10⁻⁵. Node, feature and token counts agree exactly.
+
+**Effect.** Metric time fell from 15.3 s to 0.5 s per graph. Attribution is now ~99 %
+of runtime: 24.0 s mean per graph, so ~1.9 h for 280 graphs (2.8 h with margin).
+
+### Also noted
+
+Peak GPU memory reached 12.3 GB of 14.56 on the densest pilot graph, since the fast path
+holds the full adjacency on the device. Day 3 retries any out-of-memory graph on CPU
+rather than dropping it.
