@@ -381,3 +381,210 @@ of runtime: 24.0 s mean per graph, so ~1.9 h for 280 graphs (2.8 h with margin).
 Peak GPU memory reached 12.3 GB of 14.56 on the densest pilot graph, since the fast path
 holds the full adjacency on the device. Day 3 retries any out-of-memory graph on CPU
 rather than dropping it.
+
+## Position summaries and prompt length [21-09-26 3:26]
+Position summaries and prompt length. Excluding BOS and final positions leaves n−2 interior positions, as few as 3. Raw Gini has a maximum of (n−1)/n, so it scales with length independently of the prompt. Position concentration is analysed using normalised Gini, G × n/(n−1), computed from the stored per-position profiles. Prompts with fewer than 5 interior positions ([k] of them) are retained, but position summaries are reported both with and without them.
+
+**Length balance.** Final eta² (category → token count) = 0.131 across 8 categories and 255 prompts. The largest deviations from the grand mean are induction (+2.5 tokens) and entity (−1.6). Multiple choice, previously the main source of length imbalance (overall eta² 0.253 with it included), was dropped for failing its manipulation check. Token count is carried as a covariate.
+
+
+## Corrections to earlier entries [22-09-2026 3:26]
+
+This log is append-only, so earlier entries are corrected here rather than edited.
+
+Date typo. Four entries are dated "17-09-2926". The year should read 2026. They were written on 17 September 2026.
+Placeholder filled. In "Position summaries and prompt length", "[k] of them" is 27: code completion 4, obfuscated 14, syntactic agreement 9.
+Superseded: obfuscation entry (17-09, 4:43PM). Stated 8 complete ladders / 32 prompts. Final is 11 ladders / 44 prompts — see D2.7.
+Superseded: collinearity entry (17-09, 5:20PM). Stated entropy eta² = 0.720 and r = −0.194, with multiple choice as the lowest-entropy category. Final values, on the 8-category corpus, are eta² = 0.753 and r = −0.109. The three-model analysis plan in that entry is unchanged.
+Superseded: both length-balance entries (17-09). Final length eta² is 0.131, see D2.11.
+Superseded: Section 2 configuration. max_feature_nodes=16384 and the confidence filter are both replaced — see "Final configuration as of Day 3" at the end of this log.
+
+**Day 2 — corpus construction [22-09-2026 3:26]**
+
+Every change below was made on the basis of manipulation checks, which test whether a prompt engages the mechanism its category is named for. None was made on the basis of attribution-graph outcomes, which had not been collected for any corpus prompt at the time of writing.
+
+#### D2.1 Induction rebuilt
+
+Sentence-frame prompts ("The {nonce} ran fast. The {nonce}") did not test induction: the model predicted ran or was in 20/20 cases, completing the sentence frame rather than copying the nonce token. They were dropped.
+
+The category now uses bigram repetition only, "a b a b a", with each nonce pair in both orders (24 prompts). Copying is 24/24 by first-token prefix match, and 24/24 under a strict test requiring the first three characters over a three-token greedy continuation. Six first-token predictions were single characters; all six continued into the correct word.
+
+Two earlier implementations of the copying check were wrong in opposite directions — one counted any predicted token appearing in the prompt (reported 88%), one required an exact whole-word match despite nonce words tokenising into fragments (reported 0%). The prefix-match version is used.
+
+#### D2.2 Multi-hop cities corrected
+
+Five of the original ten cities — Phoenix, Atlanta, Boston, Denver, Nashville — are their own state capital, so the answer was present in the prompt and could be copied without a second hop. Replaced with non-capital cities: Dallas, Seattle, Miami, Detroit, Chicago, Buffalo, Pittsburgh, Milwaukee, Memphis, Omaha.
+
+#### D2.3 Fact: prefix adopted for short answer frames
+
+The attribution graph explains whatever the model predicts, so a factual prompt that does not elicit the answer produces a graph of something else. Answer rates were measured with and without a Fact: prefix (the framing used in circuit-tracer's own demo):
+
+subtype	bare	with Fact:
+capital_short	0.33	0.92
+state_capital	0.80	1.00
+sport_short	0.75	0.75
+city_language_long	0.80	0.60
+state_capital_long	1.00	0.80
+overall	0.72	0.89
+
+The prefix is applied to the short frames only (capital_short, sport_short, state_capital), because it lowers the answer rate on two long frames. Short and long frames within factual recall and multi-hop therefore differ in format as well as length; subtype records this. Final task success with the prefix: factual recall 0.80, multi-hop 0.94.
+
+#### D2.4 Multiple choice dropped after two failed designs
+
+Design 1, letter options. Gemma-2-2B (base) does not perform multiple-choice symbol binding. The arrow format (... -> () continued the option list: 12/12 predicted c, an option that does not exist. The answer format (... Answer: () defaulted to a, chosen 75% of the time; accuracy was 58%, against 42% for always answering a. Constrained choice between the two letter logits was also 58%, so the failure is in binding answers to letters, not in the top-1 token masking a known answer.
+
+Design 2, forced choice between option words, "{stem} {x} or {y}? {stem}", each item in both orders. Constrained accuracy 71%, top-1 71%, first-listed option chosen 79% of the time — failing the criteria set before the check was run (≥80%, ≥70%, 30–70%). All seven errors chose the first-listed option; accuracy was 83% when the correct option came first and 58% when it came second. The cause is the format: repeating the stem creates an induction pattern, and the model copies whatever followed the stem's first occurrence, overriding factual knowledge.
+
+Per the rule stated with the check, the category was dropped rather than redesigned a third time, since a third format chosen after two observed failures would amount to selecting a format by its result. The attention blind spot remains covered by induction.
+
+The design-2 failure is itself a small observation — in-context copying overriding stored factual knowledge — and will be reported descriptively. It is not part of the confirmatory analysis. The check output is saved as check_forced_choice.csv from the run of 22-09-2026.
+
+#### D2.5 Known vs unknown entity: construction and manipulation check
+
+16 matched pairs. Each pair shares a first name and has identical token count within the frame "{name} was born in the year", measured in the frame rather than standalone, since famous surnames get their own token precisely because they are frequent. Each unknown name uses a distinct invented surname, so no single invented token dominates the unknown arm.
+
+Manipulation check. Confidence does not separate the arms: mean top-1 probability 0.819 known vs 0.837 unknown, because both predict a leading space before the year. The generated year does: greedy 6-token continuations give round-numbered years (ending 0 or 5) for 5/16 known vs 16/16 unknown, Fisher exact p = 6.77 × 10⁻⁵. Known names produce specific years, spot-checked against reality; all five round known years are correct years that happen to end in 0 or 5. The model is not uncertain about fabricated people — it is confidently wrong.
+
+Composition. 13 of 16 pairs use women's names, because less-tokenised surnames correlate with lesser fame, which correlates with historical under-recognition. Not expected to affect the measurement; recorded so the composition is not mistaken for a choice.
+
+The long frame ("One fact widely reported about {name} is that they were") was dropped: it predicted the at p ≈ 0.1–0.27 for both arms and measured nothing.
+
+#### D2.6 Syntactic agreement validated
+
+The 18 noun-phrase prompts pair singular heads with plural distractors and vice versa (agreement attraction). Where the model predicts a number-marked verb (10/18), it agrees with the true head in 10/10. Comparing plural and singular verb logits directly (were−was + are−is), which covers all 18, agreement is 18/18, with mean margin +12.2 for plural heads and −7.5 for singular heads, every item on the correct side. No attraction errors.
+
+The remaining 8 NP prompts continue the noun phrase (of, in) or predict number-neutral had. The 8 fill_ prompts ("The cat sat on the") involve no agreement and serve as a syntax control.
+
+An earlier run reported 0% agreement because a pandas column named head collided with the DataFrame.head() method. Corrected before any conclusion was drawn.
+
+#### D2.7 Obfuscation ladder, final
+
+12 base sentences × 4 rungs (clean, typo, random capitals, character substitution). One base (b11) was dropped because its substitution rung reached 21 tokens; only complete four-rung ladders are kept, so every rung comparison is within the same sentence. Final: 11 ladders, 44 prompts.
+
+A bug in which the typo rung could select a word of three letters or fewer and change nothing was fixed; the generator now asserts no typo rung equals its clean base.
+
+Next-token entropy by rung is 3.68, 4.19, 4.96, 4.28 — not monotonic in corruption severity, replicating the pattern seen on different corrupted text on 17-09. Token count by rung is 5.6, 6.8, 11.0, 16.0: corruption and length are intrinsically confounded, because substituted text fragments into character-level tokens, which is the mechanism under test. Reported, not controlled.
+
+#### D2.8 Confidence filter dropped
+
+The 17-09 entry specified that the filter would be dropped if no entropy band retained every category above n = 20. None did — the gentlest band tested reduced the smallest category to 18. The filter was therefore dropped. Next-token entropy and top-1 probability are carried as covariates. A filter would have imposed different selection pressure on different categories; a covariate does not.
+
+#### D2.9 Task success recorded per prompt
+
+task_ok is stored for every prompt with a single correct answer:
+
+category	n defined	rate
+arithmetic	28	0.96
+factual recall	40	0.80
+multi-hop	32	0.94
+induction	24	1.00
+syntactic agreement (NP prompts)	18	1.00
+
+Left empty for code completion, entity, obfuscated text and syntax fill prompts, which have no single correct answer. Use is specified in D3.9.
+
+#### D2.10 Two smaller corrections
+Syntax prompts: "...that morning, The keys..." had a capital mid-sentence. Lower-cased.
+Code completion: "raise ValueError(" fell below MIN_TOKENS (4 tokens) and was dropped.
+D2.11 Final corpus
+
+255 prompts, 8 categories.
+
+category	n
+obfuscated	44
+factual recall	40
+entity known/unknown	32
+multi-hop	32
+code completion	29
+arithmetic	28
+syntactic agreement	26
+induction	24
+
+Length eta² (category → token count) = 0.131. Largest deviations from the grand mean: induction +2.5 tokens, entity −1.6. Entropy eta² = 0.753; r(entropy, token count) = −0.109.
+
+### Day 3 — decisions fixed before any corpus graph is attributed [22-09-2026 3:26]
+#### D3.1 Which implementation is the primary outcome
+
+Section 3 names the library's replacement score as primary. The corpus pipeline uses graph_metrics_fast (own implementation), which differs from the library by ~0.008 on the reference prompt — 150× the noise floor.
+
+Rule, applied before the loop starts: time the library's metric function on the reference graph.
+
+If it takes under 5 s per graph, it is computed for every corpus graph and remains primary. The own implementation is recorded alongside, and agreement is reported.
+If it takes 5 s or more, the own implementation becomes primary, the library metric is computed on the 32-graph subsample in D3.5, and the correlation between the two is reported.
+
+Measured: METRIC_FN = [__] s on the reference graph → primary = [library / own]. (**Ran at start of this in DAY3 notebook on HH:MM 2X-09-2026**])
+
+#### D3.2 The 0.008 discrepancy
+
+Section 0 committed to explaining the gap by reading the library's source.
+
+Resolution: [state the difference — e.g. how logit nodes are weighted or how rows are normalised — or: "Not resolved. The library source was read on 21-09 but the difference could not be attributed to a specific step. Both values are recorded for every graph and the conclusions are checked under each."]
+
+#### D3.3 Failure handling in the corpus run
+
+Every prompt produces a row. No prompt is silently dropped.
+
+Feature-cap saturation (graph rejected by the guard): recorded as status = saturated.
+Out of GPU memory during metrics: retried once on CPU. If that succeeds, recorded normally with metrics_device = cpu; if not, status = oom.
+Any other exception: status = error, with the message.
+Non-zero BOS or final-position error (> 1 × 10⁻⁶): the graph is recorded but flagged status = structural_zero_violated and excluded from all position summaries, since the interior-position rule depends on those zeros.
+
+Failures are reported as counts by category. Any category losing more than 10% of its prompts is flagged in the results, and its estimates are reported with that caveat.
+
+#### D3.4 Model-consistency check
+
+Day 2's cheap predictors, task_ok, and the Fact: decision were computed on the eager-attention HuggingFace model. Attribution runs on the nnsight ReplacementModel. Before the loop, 24 corpus prompts are sampled — 3 per category, random_state = 0 — and top-1 tokens compared between the two models.
+
+Action, fixed now: if top-1 disagrees on 2 or more of the 24, all cheap predictors (top1_prob, top1_token, next_token_entropy) and task_ok are recomputed on the ReplacementModel for every prompt, and those values are used in the analysis. If 0 or 1 disagree, the Day 2 values are used and the check is reported.
+
+#### D3.5 Pruning-curve subsample
+
+The library's full prune_graph curve is computed on 32 graphs: 4 per category, sampled with random_state = 0 from successfully attributed prompts. Agreement with the per-graph node-count curve is reported as a correlation at each threshold.
+
+#### D3.6 P1 with multiple choice removed
+
+P1 is scored on the 8 remaining categories, with multiple choice deleted from the predicted ranking and the relative order of the others unchanged:
+
+Factual recall · 2. Syntactic agreement · 3. Two-digit arithmetic · 4. Known vs unknown entity ·
+Multi-hop · 6. Code completion · 7. Induction · 8. Obfuscated text
+#### D3.7 P3 primary measure
+
+P3 compares variance explained by category in error location against replacement score. Section 6.3 lists seven error-location summaries; testing all seven against one threshold would make a pass likely by chance.
+
+Primary: normalised interior Gini of the per-position error profile, G × n/(n−1) on positions 1 to n−2. Test: eta² of category on normalised Gini is at least 2× eta² of category on logit-transformed replacement score. The other six summaries are reported as secondary and do not count toward P3.
+
+#### D3.8 Human rating protocol
+
+Rubric, fixed before any graph is viewed:
+
+2 — I can state a causal path from input tokens to the output in one sentence, naming the intermediate features.
+1 — I can identify at least one meaningful intermediate feature, but cannot trace a complete path.
+0 — Neither.
+
+Sampling. 40 graphs: replacement scores of all successful graphs are divided into 8 quantile bins, and 5 graphs drawn per bin with random_state = 0. 10 of the 40 are then re-inserted as unmarked duplicates, giving 50 presentations in randomised order.
+
+Presentation. Pruned at node threshold 0.8, viewed in the circuit-tracer graph viewer with all metric values hidden. 5-minute cap per graph.
+
+Reliability. Intra-rater agreement on the 10 duplicates is reported as weighted kappa. If below 0.6, P5 is reported as uninterpretable (Section 5).
+
+#### D3.9 Multiple comparisons and the task-success subset
+Benjamini–Hochberg is applied across the 8 category contrasts (not 9) and across outcomes.
+Every category effect is reported twice: on all prompts (primary), and on the task_ok = True subset where defined (secondary). The subset analysis tests whether category effects are driven by prompts where the model did not do the intended task.
+Final configuration as of Day 3 [22-09-2026 HH:MM] **set after confirmation**
+setting	value
+Model	google/gemma-2-2b, bfloat16
+Transcoders	GemmaScope per-layer (gemma)
+Backend	nnsight
+max_feature_nodes	32768
+batch_size	32
+lazy_encoder	True
+Metrics	graph_metrics_fast, GPU float32 (agrees with float64 to 3 × 10⁻⁸)
+Pruning	node-count curve per graph; library prune_graph on 32-graph subsample
+Position summaries	interior positions only; normalised Gini
+Noise floor	~5 × 10⁻⁵ on replacement score
+Corpus	255 prompts, 8 categories
+MAX_TOKENS / MIN_TOKENS	20 / 5
+FACT_PREFIX	"Fact: ", short frames only
+Confidence filter	none; entropy and top-1 as covariates
+Hardware	Kaggle T4
+Packages	torch 2.10.0, transformers 4.57.3, circuit-tracer 0.5.0, nnsight 0.7.0
+Expected runtime	~24 s per graph, ~1.7 h for the corpus
