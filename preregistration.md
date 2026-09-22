@@ -536,6 +536,8 @@ Day 2's cheap predictors, task_ok, and the Fact: decision were computed on the e
 
 Action, fixed now: if top-1 disagrees on 2 or more of the 24, all cheap predictors (top1_prob, top1_token, next_token_entropy) and task_ok are recomputed on the ReplacementModel for every prompt, and those values are used in the analysis. If 0 or 1 disagree, the Day 2 values are used and the check is reported.
 
+**D3.4 — outcome [22-09-2026 5:10PM].** 0/24 disagreements on exact decoded string (0/24 ignoring whitespace). Not triggered; Day 2 values for top-1, entropy and task_ok are used throughout. The three entity prompts agree on a leading space before the year, a weaker test than the 21 prompts agreeing on content tokens. Top-1 was read from the graph's logit_tokens for every prompt without failure. Whole-corpus agreement is reported after the run.
+
 #### D3.5 Pruning-curve subsample
 
 The library's full prune_graph curve is computed on 32 graphs: 4 per category, sampled with random_state = 0 from successfully attributed prompts. Agreement with the per-graph node-count curve is reported as a correlation at each threshold.
