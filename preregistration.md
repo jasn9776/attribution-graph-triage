@@ -655,3 +655,6 @@ practitioner would use.
 
 **Reported either way:** the 24-prompt result, and top-1 agreement between the two models across
 the whole corpus, computed after the run from the per-prompt ReplacementModel values.
+
+**D3.5 — outcome. 22-09-2026 7:36PM].**
+Library pruning curve computed on 32 graphs (4 per category, random_state = 0). Spearman correlation between the per-graph node-count curve and the library's prune_graph curve: 1.000, 1.000, 1.000, 0.994 at thresholds 0.95, 0.9, 0.8, 0.7 (n = 32 each). The node-count curve is used for all corpus graphs. Maximum absolute difference from the library, including re-attribution: completeness 9.9×10⁻⁵, replacement 3.4×10⁻⁴ — the latter above the Day 1 noise floor of 5×10⁻⁵. Diagnosis: [same-graph difference ___; re-attribution difference ___ on prompt ___]. [Conclusion: re-attribution noise scales with graph size; noise floor revised to ___ for large graphs. / Fast path diverges from the library on ___.]
