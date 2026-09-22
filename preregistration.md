@@ -603,3 +603,47 @@ Branch 2. On four pilot prompts under the corrected implementation, BOS error is
 This reverses the note in Section 6.3. Error at the read-out position is measurable and is the dominant error location on all four pilot prompts. A secondary summary, err_final_share, is recorded per graph. Normalised interior Gini remains the P3 primary measure as fixed in D3.7; because the final position dominates, it is expected to largely reflect the final-position share, which will be reported alongside it.
 
 **Result:** all 30 zeros match the layer-major prediction exactly — 26 at BOS (every layer) and 4 at the last layer's positions 1 to n−2. No unexplained zeros; no predicted zeros missing. Position-major does not match.
+
+
+### D3.4 — refinement to the model-consistency action [22-09-2026 04:59]
+
+**Written before the check was run.** Refines the action pre-registered in D3.4. The check itself —
+24 prompts, 3 per category, `random_state = 0`, threshold of 2 or more disagreements — is unchanged.
+
+**What is compared.** The top-1 token from Day 2's eager-attention HuggingFace model (`top1_token`
+in `corpus.csv`) against the ReplacementModel's top-1, read from the attribution graph's logit
+nodes as the highest-probability logit. Agreement is judged on the **exact decoded string**. A
+whitespace-insensitive comparison is also reported but does not count toward the threshold.
+
+**If the ReplacementModel's top-1 cannot be read from a graph**, that prompt counts as a
+disagreement. If it cannot be read for most prompts, the extraction is treated as broken: it is
+repaired and the check rerun before the corpus loop, and the failed run does not count as a
+trigger.
+
+**Refined action if triggered (2 or more disagreements):**
+
+- **Top-1 token and probability:** replaced by the ReplacementModel's values, for every prompt.
+  These are recorded from each graph during the corpus run, so the replacement is exact and costs
+  nothing.
+- **`task_ok`, recomputed from the ReplacementModel's top-1** for factual recall, multi-hop,
+  arithmetic and induction, by prefix match against the expected answer. For induction this is the
+  first-token prefix test, not the three-token strict test used on Day 2, since a three-token
+  continuation cannot be recovered from the graph's logits.
+- **`task_ok` for syntactic agreement: retained from Day 2.** It is defined by the plural-minus-
+  singular verb-logit margin, and the graph stores only the top logits, which need not include
+  both verb forms.
+- **Next-token entropy: retained from Day 2.** The graph stores only the top logits, so the full
+  distribution cannot be recovered. Entropy also serves as a *cheap predictor* — something a
+  practitioner computes on a standard model before attributing anything — so the standard
+  eager-attention model is the appropriate source regardless.
+
+**Reason for the refinement.** The original action said to recompute *all* cheap predictors on the
+ReplacementModel. Doing so for entropy would require a separate full forward pass through the
+attribution wrapper, which has not been validated for that use under the nnsight backend. The
+refinement recomputes exactly what the graphs make available and keeps the rest on the model a
+practitioner would use.
+
+**If not triggered (0 or 1 disagreements):** Day 2 values are used throughout.
+
+**Reported either way:** the 24-prompt result, and top-1 agreement between the two models across
+the whole corpus, computed after the run from the per-prompt ReplacementModel values.
