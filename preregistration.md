@@ -645,6 +645,9 @@ attribution wrapper, which has not been validated for that use under the nnsight
 refinement recomputes exactly what the graphs make available and keeps the rest on the model a
 practitioner would use.
 
+### Corpus run — outcome [22-09-2026 6:45PM].
+255/255 prompts attributed with status ok. No feature-cap saturation, no out-of-memory failures, no BOS structural-zero violations, no metrics retried on CPU; no category lost prompts. Mean attribution 18.1 s (max 53.9 s), 72 minutes for the loop; peak GPU 12.5 GB. Whole-corpus top-1 agreement between the Day 2 HF model and the ReplacementModel: 97.6% (6 of 255 differ). D3.4 was not triggered on the pre-registered 24-prompt sample, so Day 2 values are used; the 6 disagreements are listed in [file] and reported as a sensitivity check.
+
 **If not triggered (0 or 1 disagreements):** Day 2 values are used throughout.
 
 **Reported either way:** the 24-prompt result, and top-1 agreement between the two models across
