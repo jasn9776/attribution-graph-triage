@@ -648,6 +648,9 @@ practitioner would use.
 ### Corpus run — outcome [22-09-2026 6:45PM].
 255/255 prompts attributed with status ok. No feature-cap saturation, no out-of-memory failures, no BOS structural-zero violations, no metrics retried on CPU; no category lost prompts. Mean attribution 18.1 s (max 53.9 s), 72 minutes for the loop; peak GPU 12.5 GB. Whole-corpus top-1 agreement between the Day 2 HF model and the ReplacementModel: 97.6% (6 of 255 differ). D3.4 was not triggered on the pre-registered 24-prompt sample, so Day 2 values are used; the 6 disagreements are listed in [file] and reported as a sensitivity check.
 
+**Whole-corpus top-1 disagreements.**
+6 of 255 (2.4%): p0008, p0013, p0087, p0117, p0219, p0237. Four do not affect task_ok: two are near-ties between plausible content words (glass/bowl, post/letter), one is a tokenisation difference (c/camera), and in one both models miss the answer (p0013, the/also). In two, the ReplacementModel produces the correct answer where the HF model produced a function word — p0008 (also → Rome) and p0117 (with → Italian) — so task_ok would flip from False to True. Per D3.4 (not triggered), Day 2 values are retained. The D3.9 task_ok subset analysis is reported both as registered and with these two prompts flipped. Both flips run in the same direction, towards the answer, which may reflect bf16 near-ties or a small backend difference in attention; two cases are too few to distinguish.
+
 **If not triggered (0 or 1 disagreements):** Day 2 values are used throughout.
 
 **Reported either way:** the 24-prompt result, and top-1 agreement between the two models across
