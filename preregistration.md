@@ -588,3 +588,18 @@ Confidence filter	none; entropy and top-1 as covariates
 Hardware	Kaggle T4
 Packages	torch 2.10.0, transformers 4.57.3, circuit-tracer 0.5.0, nnsight 0.7.0
 Expected runtime	~24 s per graph, ~1.7 h for the corpus
+
+## Adjustment to D3.1.
+ After the correction in D3.2, graph_metrics_fast reproduces the library's compute_graph_scores to within [δ] on the reference graph and on [one long prompt]. The library's definition therefore remains the primary outcome, computed via the fast path. compute_graph_scores is also called on the 32-graph subsample in D3.5 as an ongoing check.
+
+## D3.2 — resolved.
+The 0.008 gap was a bug in my implementation, not a difference of method. The library locates logit nodes by position — the last n_logits nodes, in the order of logit_probabilities. My implementation located them structurally, as nodes with no outgoing edges, which also captures dead features; narrowing that set by incoming weight reordered the logits, so probabilities were assigned to the wrong nodes. Completeness also differed by definition: the library averages the non-error input fraction over all nodes, weighted by influence plus the logit probabilities. Both corrected on 22-09-2026 by adopting the library's layout and definition. The library's layout independently confirms the errors-first ordering established from graph structure on Day 1.
+### Consequence
+The Day 1 pilot values in Section 0 were computed with the implementation corrected in D3.2 and are biased by roughly 0.008. Predictions P2 and P4 were informed by the spread of those values (0.071 and 0.017), which the bias does not materially change. P2 and P4 are retained as written.
+
+## D3.10 — outcome, [22-09-2026 4:57PM]. 
+Branch 2. On four pilot prompts under the corrected implementation, BOS error is 0.000000 on all four; final-position error is 0.044–0.167, exceeding the largest interior position on every prompt (on the France prompt, about 60% of total error). Position summaries use positions 1 to n−1; D3.3's structural-zero flag applies to BOS only; n_interior is recomputed as n−1 at analysis (the saved corpus.csv column uses n−2). Layer-major reshape re-confirmed: [26 zeros, all at residue 0 mod n_tok; flat under mod 26].
+
+This reverses the note in Section 6.3. Error at the read-out position is measurable and is the dominant error location on all four pilot prompts. A secondary summary, err_final_share, is recorded per graph. Normalised interior Gini remains the P3 primary measure as fixed in D3.7; because the final position dominates, it is expected to largely reflect the final-position share, which will be reported alongside it.
+
+**Result:** all 30 zeros match the layer-major prediction exactly — 26 at BOS (every layer) and 4 at the last layer's positions 1 to n−2. No unexplained zeros; no predicted zeros missing. Position-major does not match.
