@@ -184,6 +184,7 @@ preference here, it is the only option.
 ```
 notebooks/
   day1_final.ipynb              environment, frozen config, metric validation, timing
+  day1-v4-setup-and-metrics-OLD.ipynb   superseded Day 1 notebook, kept as a record
   day2_final_v2.ipynb           corpus generation, length balance, category validation
   day3_corpus_run.ipynb         opening checks and the resumable corpus loop
   day5_rating.ipynb             blind rating protocol (committed before rating)
