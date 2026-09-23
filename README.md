@@ -100,10 +100,7 @@ their own state capital, making the answer copyable without a second hop.
 **Multiple choice was dropped.** Gemma-2-2B (base) does not bind answers to option letters: the
 arrow format continued the option list (12/12 predicted `c`, a non-existent option) and the answer
 format defaulted to `a` (chosen 75% of the time; 58% accuracy against a 42% always-`a` baseline).
-A redesign as forced choice between two in-context option words also failed — 79% of choices went
-to the first-listed option, because repeating the stem created an induction pattern and in-context
-copying overrode factual knowledge. Per a rule fixed before the check was run, the category was
-dropped rather than redesigned a third time.
+A redesign as forced choice between two in-context option words also failed: 79% of choices went to the first-listed option, and all seven errors were first-listed picks. The paired design makes the mechanism visible — the same item is answered correctly when the correct option is listed first and incorrectly when it is listed second (e.g. Paris is in Spain or France → Spain; Paris is in France or Spain → France). Repeating the stem creates an induction pattern, and in-context copying overrides factual knowledge.
 
 ## Reproducing this
 
