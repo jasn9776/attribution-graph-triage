@@ -1,0 +1,287 @@
+prompt_id,category,subtype,prompt,expected,n_tok,n_interior,task_ok,top1_prob,top1_token,next_token_entropy,mean_token_logid
+p0000,factual_recall,capital_short,Fact: The capital of France is,Paris,8,6,True,0.4055372476577759, Paris,2.7702419757843018,7.503238788231659
+p0001,factual_recall,capital_med,"They visited the capital of France, which is",Paris,10,8,False,0.12780101597309113, also,3.573744297027588,7.487155099022566
+p0002,factual_recall,capital_long,"When travelling abroad last year they visited the capital of France, which is",Paris,15,13,False,0.13603146374225616, also,3.7202649116516113,7.770735561035879
+p0003,factual_recall,capital_short,Fact: The capital of Japan is,Tokyo,8,6,True,0.6174440383911133, Tokyo,2.090878486633301,7.500054035165416
+p0004,factual_recall,capital_med,"They visited the capital of Japan, which is",Tokyo,10,8,True,0.16328579187393188, Tokyo,3.548189640045166,7.484607296569571
+p0005,factual_recall,capital_long,"When travelling abroad last year they visited the capital of Japan, which is",Tokyo,15,13,True,0.1903454214334488, Tokyo,3.569204330444336,7.769037026067218
+p0006,factual_recall,capital_short,Fact: The capital of Italy is,Rome,8,6,True,0.5273703336715698, Rome,2.406466484069824,7.582593434068088
+p0007,factual_recall,capital_med,"They visited the capital of Italy, which is",Rome,10,8,False,0.11158298701047897, the,3.6108932495117188,7.55063881569171
+p0008,factual_recall,capital_long,"When travelling abroad last year they visited the capital of Italy, which is",Rome,15,13,False,0.12460602074861526, also,3.7101616859436035,7.813058038815309
+p0009,factual_recall,capital_short,Fact: The capital of Egypt is,Cairo,8,6,True,0.5377920269966125, Cairo,2.4211668968200684,7.654893278006856
+p0010,factual_recall,capital_med,"They visited the capital of Egypt, which is",Cairo,10,8,True,0.14268967509269714, Cairo,3.550663471221924,7.608478690842723
+p0011,factual_recall,capital_long,"When travelling abroad last year they visited the capital of Egypt, which is",Cairo,15,13,True,0.28034844994544983, Cairo,3.3653385639190674,7.851617955582651
+p0012,factual_recall,capital_short,Fact: The capital of Brazil is,Brasilia,8,6,False,0.17456181347370148, Rio,3.2624857425689697,7.648398636447279
+p0013,factual_recall,capital_med,"They visited the capital of Brazil, which is",Brasilia,10,8,False,0.12260226905345917, the,3.6919164657592773,7.603282977595062
+p0014,factual_recall,capital_long,"When travelling abroad last year they visited the capital of Brazil, which is",Brasilia,15,13,False,0.11122114211320877, also,3.7179248332977295,7.848154146750877
+p0015,factual_recall,capital_short,Fact: The capital of Kenya is,Nairobi,8,6,True,0.6035695672035217, Nairobi,2.080005168914795,7.695314921380367
+p0016,factual_recall,capital_med,"They visited the capital of Kenya, which is",Nairobi,10,8,True,0.3443557024002075, Nairobi,3.016850709915161,7.640816005541533
+p0017,factual_recall,capital_long,"When travelling abroad last year they visited the capital of Kenya, which is",Nairobi,15,13,True,0.37401115894317627, Nairobi,3.0492310523986816,7.8731761653818575
+p0018,factual_recall,capital_short,Fact: The capital of Norway is,Oslo,8,6,True,0.5594292283058167, Oslo,2.258263111114502,7.707347602986169
+p0019,factual_recall,capital_med,"They visited the capital of Norway, which is",Oslo,10,8,True,0.2017483413219452, Oslo,3.442570209503174,7.650442150826175
+p0020,factual_recall,capital_long,"When travelling abroad last year they visited the capital of Norway, which is",Oslo,15,13,True,0.2658422887325287, Oslo,3.3803820610046387,7.8795935955716185
+p0021,factual_recall,capital_short,Fact: The capital of Peru is,Lima,8,6,True,0.5367308855056763, Lima,2.3630166053771973,7.7033908019608575
+p0022,factual_recall,capital_med,"They visited the capital of Peru, which is",Lima,10,8,True,0.2226603925228119, Lima,3.29996395111084,7.647276710005924
+p0023,factual_recall,capital_long,"When travelling abroad last year they visited the capital of Peru, which is",Lima,15,13,True,0.25617626309394836, Lima,3.2950077056884766,7.877483301691453
+p0024,factual_recall,capital_short,Fact: The capital of Thailand is,Bangkok,8,6,True,0.6423689126968384, Bangkok,1.9798794984817505,7.69472997987052
+p0025,factual_recall,capital_med,"They visited the capital of Thailand, which is",Bangkok,10,8,True,0.20206354558467865, Bangkok,3.433973550796509,7.640348052333655
+p0026,factual_recall,capital_long,"When travelling abroad last year they visited the capital of Thailand, which is",Bangkok,15,13,True,0.32907095551490784, Bangkok,3.1898155212402344,7.8728641965766055
+p0027,factual_recall,capital_short,Fact: The capital of Portugal is,Lisbon,8,6,True,0.6812485456466675, Lisbon,1.7628766298294067,7.661311048540792
+p0028,factual_recall,capital_med,"They visited the capital of Portugal, which is",Lisbon,10,8,True,0.2113747000694275, Lisbon,3.346560478210449,7.613612907269872
+p0029,factual_recall,capital_long,"When travelling abroad last year they visited the capital of Portugal, which is",Lisbon,15,13,True,0.3772644102573395, Lisbon,3.0012972354888916,7.855040766534085
+p0030,factual_recall,capital_short,Fact: The capital of Greece is,Athens,8,6,True,0.5164110660552979, Athens,2.3684988021850586,7.682671322095904
+p0031,factual_recall,capital_med,"They visited the capital of Greece, which is",Athens,10,8,False,0.15315786004066467, also,3.4253294467926025,7.630701126113962
+p0032,factual_recall,capital_long,"When travelling abroad last year they visited the capital of Greece, which is",Athens,15,13,True,0.21210993826389313, Athens,3.332946538925171,7.8664329124301435
+p0033,factual_recall,capital_short,Fact: The capital of Cuba is,Havana,8,6,True,0.6382982730865479, Havana,1.9440959692001343,7.682460806037138
+p0034,factual_recall,capital_med,"They visited the capital of Cuba, which is",Havana,10,8,True,0.26968273520469666, Havana,3.3384385108947754,7.630532713266949
+p0035,factual_recall,capital_long,"When travelling abroad last year they visited the capital of Cuba, which is",Havana,15,13,True,0.38143566250801086, Havana,3.0687918663024902,7.866320637198802
+p0036,factual_recall,sport_short,Fact: Michael Jordan plays the sport of,basketball,9,7,True,0.83213210105896, basketball,0.9904072880744934,8.132795023603032
+p0037,factual_recall,sport_short,Fact: Serena Williams plays the sport of,tennis,9,7,True,0.9529300332069397, tennis,0.3443816304206848,8.330911493866054
+p0038,factual_recall,sport_short,Fact: Lionel Messi plays the sport of,soccer,9,7,True,0.4727843999862671, soccer,1.4081112146377563,8.443661200148352
+p0039,factual_recall,sport_short,Fact: Tiger Woods plays the sport of,golf,9,7,True,0.985089123249054, golf,0.1305057555437088,8.357187878269308
+p0040,arithmetic,bare_short,36+59=,95,7,5,True,0.605532169342041,9,1.7653603553771973,10.758666958000424
+p0041,arithmetic,bare_short,24+17=,41,7,5,True,0.5926973223686218,4,1.8179799318313599,10.75863477910712
+p0042,arithmetic,bare_short,48+35=,83,7,5,True,0.6466593742370605,8,1.743902325630188,10.75866574376055
+p0043,arithmetic,bare_short,72+19=,91,7,5,True,0.5016174912452698,9,2.0963549613952637,10.758637814571358
+p0044,arithmetic,bare_short,53+28=,81,7,5,True,0.7793788909912109,8,1.2285633087158203,10.758649958306709
+p0045,arithmetic,bare_short,61+44=,105,7,5,True,0.7040722370147705,1,1.4155628681182861,10.758646922135444
+p0046,arithmetic,bare_short,15+27=,42,7,5,True,0.7345870137214661,4,1.322540283203125,10.758633564903363
+p0047,arithmetic,bare_short,83+12=,95,7,5,True,0.36649879813194275,9,2.3363850116729736,10.758629315263743
+p0048,arithmetic,bare_short,46+39=,85,7,5,True,0.5497627854347229,8,2.071369171142578,10.75866817220418
+p0049,arithmetic,bare_short,57+26=,83,7,5,True,0.7285616397857666,8,1.431442141532898,10.75866027886191
+p0050,arithmetic,bare_short,34+51=,85,7,5,True,0.6904580593109131,8,1.5352760553359985,10.758637208577639
+p0051,arithmetic,bare_short,68+23=,91,7,5,True,0.4586929976940155,9,2.1626882553100586,10.75865602922229
+p0052,arithmetic,prefixed_med,The sum 36+59=,95,10,8,True,0.7365939021110535,9,1.5560024976730347,10.206307870860336
+p0053,arithmetic,prefixed_med,The sum 24+17=,41,10,8,True,0.4058592915534973,4,2.4107234477996826,10.20628534563502
+p0054,arithmetic,prefixed_med,The sum 48+35=,83,10,8,True,0.5952661037445068,8,2.11903715133667,10.206307020892424
+p0055,arithmetic,prefixed_med,The sum 72+19=,91,10,8,True,0.4368717074394226,9,2.7808456420898438,10.206287470459989
+p0056,arithmetic,prefixed_med,The sum 53+28=,81,10,8,True,0.5270542502403259,8,2.4992082118988037,10.206295971074734
+p0057,arithmetic,prefixed_med,The sum 61+44=,105,10,8,True,0.6458410024642944,1,2.0380897521972656,10.20629384575485
+p0058,arithmetic,prefixed_med,The sum 15+27=,42,10,8,True,0.6291354894638062,4,2.0179057121276855,10.20628449569239
+p0059,arithmetic,prefixed_med,The sum 83+12=,95,10,8,False,0.16486398875713348,"
+
+",3.579019069671631,10.206281520944659
+p0060,arithmetic,bare_long,Adding the two numbers together we compute that 36+59=,95,16,14,True,0.9108442664146423,9,0.5175108909606934,9.505541595979297
+p0061,arithmetic,bare_long,Adding the two numbers together we compute that 24+17=,41,16,14,True,0.5105361938476562,4,1.1965237855911255,9.505527517713475
+p0062,arithmetic,bare_long,Adding the two numbers together we compute that 48+35=,83,16,14,True,0.8929022550582886,8,0.523285984992981,9.505541064749352
+p0063,arithmetic,bare_long,Adding the two numbers together we compute that 72+19=,91,16,14,True,0.8840619921684265,9,0.6049672365188599,9.505528845729081
+p0064,arithmetic,bare_long,Adding the two numbers together we compute that 53+28=,81,16,14,True,0.8397685289382935,8,0.7633523344993591,9.505534158613296
+p0065,arithmetic,bare_long,Adding the two numbers together we compute that 61+44=,105,16,14,True,0.8572655916213989,1,0.6309148073196411,9.505532830288368
+p0066,arithmetic,bare_long,Adding the two numbers together we compute that 15+27=,42,16,14,True,0.8975897431373596,4,0.5706391334533691,9.505526986499333
+p0067,arithmetic,bare_long,Adding the two numbers together we compute that 83+12=,95,16,14,True,0.870934247970581,9,0.6572636365890503,9.505525127281999
+p0068,syntactic_agreement,np_short,The keys to the cabinet,,6,4,True,0.27197355031967163, are,3.277021646499634,6.629816369786899
+p0069,syntactic_agreement,np_med,"Earlier that morning, the keys to the cabinet",,10,8,True,0.3811131715774536, were,2.6108639240264893,7.803734935617824
+p0070,syntactic_agreement,np_long,"Despite everything that had happened earlier that morning, the keys to the cabinet",,15,13,True,0.3674829304218292, were,3.284041166305542,7.822782042716289
+p0071,syntactic_agreement,np_short,The book on the shelves,,6,4,True,0.2749952971935272, of,3.109335422515869,6.483554582002447
+p0072,syntactic_agreement,np_med,"Earlier that morning, the book on the shelves",,10,8,True,0.2714082598686218, of,3.110288143157959,7.715977862947153
+p0073,syntactic_agreement,np_long,"Despite everything that had happened earlier that morning, the book on the shelves",,15,13,True,0.16149291396141052, was,3.5760583877563477,7.76427732760251
+p0074,syntactic_agreement,np_short,The children in the garden,,6,4,True,0.14226466417312622, are,3.6218647956848145,6.231661980164968
+p0075,syntactic_agreement,np_med,"Earlier that morning, the children in the garden",,10,8,True,0.2925289571285248, had,3.0653481483459473,7.5648423018446636
+p0076,syntactic_agreement,np_long,"Despite everything that had happened earlier that morning, the children in the garden",,15,13,True,0.41811200976371765, were,2.983376979827881,7.663520286867519
+p0077,syntactic_agreement,np_short,The author of the novels,,6,4,True,0.1991291344165802, ,2.8853397369384766,6.505673269509252
+p0078,syntactic_agreement,np_med,"Earlier that morning, the author of the novels",,10,8,True,0.2131798416376114, ,3.163097858428955,7.729249075451236
+p0079,syntactic_agreement,np_long,"Despite everything that had happened earlier that morning, the author of the novels",,15,13,True,0.1598760038614273, ,3.601949691772461,7.77312480260523
+p0080,syntactic_agreement,np_short,The paintings in the gallery,,6,4,True,0.3263193368911743, are,3.247471809387207,6.64870675252384
+p0081,syntactic_agreement,np_med,"Earlier that morning, the paintings in the gallery",,10,8,True,0.2791762948036194, were,2.8150110244750977,7.815069165259989
+p0082,syntactic_agreement,np_long,"Despite everything that had happened earlier that morning, the paintings in the gallery",,15,13,True,0.3446987569332123, were,3.0691637992858887,7.830338195811067
+p0083,syntactic_agreement,np_short,The student with the notes,,6,4,True,0.08808087557554245, is,4.073665618896484,6.362767775937413
+p0084,syntactic_agreement,np_med,"Earlier that morning, the student with the notes",,10,8,True,0.30776575207710266, had,3.462106704711914,7.643505779308131
+p0085,syntactic_agreement,np_long,"Despite everything that had happened earlier that morning, the student with the notes",,15,13,True,0.20754443109035492, in,3.64137601852417,7.715962605176496
+p0086,syntactic_agreement,fill_short,The cat sat on the,,6,4,,0.1349726915359497, window,4.183878421783447,6.133430115433236
+p0087,syntactic_agreement,fill_short,She poured the water into the,,7,5,,0.0909864753484726, glass,3.995950222015381,6.773944332774979
+p0088,syntactic_agreement,fill_short,He placed the letter on the,,7,5,,0.36837029457092285, table,2.8833279609680176,6.496611220972881
+p0089,syntactic_agreement,fill_short,They walked slowly towards the,,6,4,,0.06825751066207886, door,4.806596279144287,7.3008584392736475
+p0090,syntactic_agreement,fill_short,The dog ran across the,,6,4,,0.2834549844264984, road,2.878312587738037,6.686760098174097
+p0091,syntactic_agreement,fill_short,I left my jacket in the,,7,5,,0.14341050386428833, car,4.186156272888184,7.198359202790913
+p0092,syntactic_agreement,fill_short,We put the boxes under the,,7,5,,0.14282603561878204, bed,3.922600746154785,6.569960354903769
+p0093,syntactic_agreement,fill_short,You can find the keys on the,,8,6,,0.07464087009429932, left,4.415682315826416,6.430951288041172
+p0094,multi_hop,state_capital,Fact: The capital of the state containing Dallas is,Austin,11,9,True,0.442625492811203, Austin,2.948343515396118,7.71823075171647
+p0095,multi_hop,state_capital_long,"Thinking about geography, the capital of the state containing Dallas is",Austin,13,11,True,0.2944667637348175, Austin,3.5345916748046875,7.987347995158563
+p0096,multi_hop,state_capital,Fact: The capital of the state containing Seattle is,Olympia,11,9,True,0.598659336566925, Olympia,2.2720112800598145,7.718672951905478
+p0097,multi_hop,state_capital_long,"Thinking about geography, the capital of the state containing Seattle is",Olympia,13,11,True,0.5600841641426086, Olympia,2.4492087364196777,7.987722164549263
+p0098,multi_hop,state_capital,Fact: The capital of the state containing Miami is,Tallahassee,11,9,True,0.4933776557445526, Tallahassee,2.8747291564941406,7.701304825707592
+p0099,multi_hop,state_capital_long,"Thinking about geography, the capital of the state containing Miami is",Tallahassee,13,11,True,0.3217078447341919, Tallahassee,3.4036693572998047,7.973026057766436
+p0100,multi_hop,state_capital,Fact: The capital of the state containing Detroit is,Lansing,11,9,True,0.5227911472320557, Lansing,2.6915581226348877,7.708244047151331
+p0101,multi_hop,state_capital_long,"Thinking about geography, the capital of the state containing Detroit is",Lansing,13,11,True,0.5600698590278625, Lansing,2.545930862426758,7.97889770668037
+p0102,multi_hop,state_capital,Fact: The capital of the state containing Chicago is,Springfield,11,9,True,0.22233746945858002, Springfield,3.4424500465393066,7.629723033088852
+p0103,multi_hop,state_capital_long,"Thinking about geography, the capital of the state containing Chicago is",Springfield,13,11,True,0.17663457989692688, Springfield,3.783914566040039,7.912456848627503
+p0104,multi_hop,state_capital,Fact: The capital of the state containing Buffalo is,Albany,11,9,True,0.28640830516815186, Albany,3.4035568237304688,7.738699070757371
+p0105,multi_hop,state_capital_long,"Thinking about geography, the capital of the state containing Buffalo is",Albany,13,11,True,0.3802490830421448, Albany,3.0817508697509766,8.004667342039326
+p0106,multi_hop,state_capital,Fact: The capital of the state containing Pittsburgh is,Harrisburg,11,9,True,0.26879674196243286, Harrisburg,3.467164993286133,7.739044220476006
+p0107,multi_hop,state_capital_long,"Thinking about geography, the capital of the state containing Pittsburgh is",Harrisburg,13,11,True,0.22961334884166718, Harrisburg,3.4774937629699707,8.004959391801249
+p0108,multi_hop,state_capital,Fact: The capital of the state containing Milwaukee is,Madison,11,9,True,0.33700865507125854, Madison,3.2316057682037354,7.7592815402983915
+p0109,multi_hop,state_capital_long,"Thinking about geography, the capital of the state containing Milwaukee is",Madison,13,11,True,0.3269808888435364, Madison,3.3205690383911133,8.022083277804805
+p0110,multi_hop,state_capital,Fact: The capital of the state containing Memphis is,Nashville,11,9,True,0.24396248161792755, Nashville,3.5271668434143066,7.778543042535984
+p0111,multi_hop,state_capital_long,"Thinking about geography, the capital of the state containing Memphis is",Nashville,13,11,True,0.1509026139974594, Nashville,3.8917245864868164,8.038381472005845
+p0112,multi_hop,state_capital,Fact: The capital of the state containing Omaha is,Lincoln,11,9,True,0.4316924512386322, Lincoln,2.7899155616760254,7.812874532431476
+p0113,multi_hop,state_capital_long,"Thinking about geography, the capital of the state containing Omaha is",Lincoln,13,11,True,0.3014703691005707, Lincoln,3.2224059104919434,8.067431194225106
+p0114,multi_hop,city_language,A person born in Paris usually speaks,French,8,6,True,0.3405103385448456, French,2.9679160118103027,7.9550928877004
+p0115,multi_hop,city_language,A person born in Berlin usually speaks,German,8,6,True,0.2597244679927826, German,3.3067941665649414,8.025455042039802
+p0116,multi_hop,city_language,A person born in Madrid usually speaks,Spanish,8,6,True,0.3127218782901764, Spanish,3.1067118644714355,8.05220211867598
+p0117,multi_hop,city_language,A person born in Rome usually speaks,Italian,8,6,False,0.149349182844162, with,3.406651496887207,8.013186191208312
+p0118,multi_hop,city_language,A person born in Tokyo usually speaks,Japanese,8,6,True,0.19533175230026245, Japanese,3.416288375854492,8.0965362524948
+p0119,multi_hop,city_language,A person born in Moscow usually speaks,Russian,8,6,True,0.3841860890388489, Russian,3.0464706420898438,8.106694647228245
+p0120,multi_hop,city_language,A person born in Lisbon usually speaks,Portuguese,8,6,True,0.37658342719078064, Portuguese,2.9385569095611572,8.238302242698406
+p0121,multi_hop,city_language_long,Someone who grew up in the city of Paris would normally speak,French,13,11,True,0.3191278576850891, French,2.8817811012268066,7.439053243032659
+p0122,multi_hop,city_language_long,Someone who grew up in the city of Berlin would normally speak,German,13,11,True,0.16857056319713593, German,3.311960220336914,7.482353030318445
+p0123,multi_hop,city_language_long,Someone who grew up in the city of Madrid would normally speak,Spanish,13,11,True,0.3037811517715454, Spanish,2.989704132080078,7.4988127697868645
+p0124,multi_hop,city_language_long,Someone who grew up in the city of Rome would normally speak,Italian,13,11,False,0.22450779378414154, with,3.3124332427978516,7.474802968268298
+p0125,multi_hop,city_language_long,Someone who grew up in the city of Tokyo would normally speak,Japanese,13,11,True,0.23626485466957092, Japanese,3.149317741394043,7.526095313675368
+p0126,code_completion,code,"def add(a, b):
+    return",,11,9,,0.9438769221305847, a,0.38957610726356506,7.506142478613892
+p0127,code_completion,code,"def square(x):
+    return x *",,11,9,,0.9734442234039307, x,0.15965047478675842,7.173381603367827
+p0128,code_completion,code,"x = 5
+y = x +",,10,8,,0.9495736956596375, ,0.3412210941314697,8.193597620295144
+p0129,code_completion,code,print('hello'.,,5,3,,0.12827251851558685,upper,3.020408868789673,6.769587653454454
+p0130,code_completion,code,"nums = [3, 1, 2]
+nums.",,15,13,,0.5224573016166687,sort,1.8596775531768799,10.012876400514468
+p0131,code_completion,code,"s = 'abc'
+print(s[",,11,9,,0.4634680151939392,0,1.52943754196167,8.899227494769583
+p0132,code_completion,code,"def f():
+    pass
+
+f(",,10,8,,0.37897294759750366,1,2.7264044284820557,7.002823615611175
+p0133,code_completion,code,"a, b = 1, 2
+a, b = b,",,17,15,,0.8685027360916138, a,0.5548504590988159,9.47003250288534
+p0134,code_completion,code,"while True:
+    break
+print(",,10,8,,0.28731003403663635,True,2.814532995223999,7.13944957724654
+p0135,code_completion,code,"import os
+os.path.",,8,6,,0.30712416768074036,exists,2.1815481185913086,7.396140344106801
+p0136,code_completion,code,"data = {}
+data['key'] =",,10,8,,0.605827271938324, ',1.5276942253112793,6.428998870608325
+p0137,code_completion,code,"assert isinstance(x,",,6,4,,0.21842871606349945, int,3.4232969284057617,9.431220283701235
+p0138,code_completion,code,f = lambda x: x *,,8,6,,0.4727530777454376, x,1.153528094291687,7.910499200270823
+p0139,code_completion,code,"counts[k] = counts.get(k,",,12,10,,0.8612747192382812, ,0.6900352239608765,10.09253070088486
+p0140,code_completion,code,text.strip().,,5,3,,0.348073810338974,split,2.1045010089874268,7.62598389225477
+p0141,code_completion,code,x: int =,,5,3,,0.5609351396560669, ,2.033283233642578,7.863191378421125
+p0142,code_completion,code,"for i in range(10):
+    print(",,13,11,,0.7965939044952393,i,0.8747401833534241,7.830937611501648
+p0143,code_completion,code,"x = [1, 2, 3]
+print(len(",,17,15,,0.995025098323822,x,0.04872395098209381,10.00869328531331
+p0144,code_completion,code,"import numpy as np
+arr = np.",,10,8,,0.5578843951225281,array,1.5866985321044922,7.274765261525235
+p0145,code_completion,code,"if x > 0:
+    y = 1
+else:
+    y =",,20,18,,0.44424498081207275, -,1.1886556148529053,8.232192792378992
+p0146,code_completion,code,"d = {'a': 1}
+for k, v in d.",,17,15,,0.9418445229530334,items,0.25175464153289795,8.724345718861198
+p0147,code_completion,code,"class Dog:
+    def __init__(self):
+        self.",,16,14,,0.48177164793014526,name,2.8141884803771973,7.2132300315205615
+p0148,code_completion,code,"result = sorted(items, key=lambda x: x.",,14,12,,0.18349385261535645,get,3.860461711883545,9.0725977933435
+p0149,code_completion,code,"with open('f.txt') as f:
+    lines = f.",,17,15,,0.6424164175987244,readlines,0.7132753133773804,7.823720834167168
+p0150,code_completion,code,"try:
+    v = int(t)
+except ValueError:
+    v =",,19,17,,0.27352359890937805, float,2.2506179809570312,8.331036448752974
+p0151,code_completion,code,"total = 0
+for n in nums:
+    total +=",,15,13,,0.8998713493347168, n,0.626431941986084,7.554629334237857
+p0152,code_completion,code,return [x for x in items if x >,,11,9,,0.4845091998577118, ,2.4956960678100586,6.960818191789122
+p0153,code_completion,code,"if not isinstance(v, str):
+    v = str(",,15,13,,0.9828459620475769,v,0.1760534942150116,8.262974658545067
+p0154,code_completion,code,"np.array([1, 2, 3]).",,13,11,,0.16551926732063293,reshape,3.386899948120117,10.424450858049555
+p0155,induction,bigram_ab,blorp trilve blorp trilve blorp,trilve,14,12,True,0.4714387059211731, tril,2.2045235633850098,8.843394013047368
+p0156,induction,bigram_ba,trilve blorp trilve blorp trilve,blorp,14,12,True,0.8898512125015259, b,0.6907050609588623,8.426849417120412
+p0157,induction,bigram_ab,zandik wemplo zandik wemplo zandik,wemplo,11,9,True,0.9077950119972229, w,0.7690874338150024,8.577249904922002
+p0158,induction,bigram_ba,wemplo zandik wemplo zandik wemplo,zandik,11,9,True,0.9191824793815613, zan,0.6547744274139404,8.774467820878057
+p0159,induction,bigram_ab,frugnat chelbis frugnat chelbis frugnat,chelbis,13,11,True,0.9339203238487244, che,0.578058123588562,9.55391730108061
+p0160,induction,bigram_ba,chelbis frugnat chelbis frugnat chelbis,frugnat,13,11,True,0.8847845792770386, fru,0.9646821618080139,9.307519871769694
+p0161,induction,bigram_ab,vornik plaskew vornik plaskew vornik,plaskew,11,9,True,0.949255108833313, plas,0.46590501070022583,8.54965324764327
+p0162,induction,bigram_ba,plaskew vornik plaskew vornik plaskew,vornik,11,9,True,0.7314743399620056, vor,2.041619300842285,9.008788660285022
+p0163,induction,bigram_ab,drimbo quathel drimbo quathel drimbo,quathel,11,9,True,0.8701373934745789, quat,0.947571337223053,8.82319394142656
+p0164,induction,bigram_ba,quathel drimbo quathel drimbo quathel,drimbo,11,9,True,0.882689893245697, dri,0.8851504325866699,8.801786527515254
+p0165,induction,bigram_ab,snerrik yolvantz snerrik yolvantz snerrik,yolvantz,16,14,True,0.9535902142524719, yol,0.3658100366592407,8.844430235802761
+p0166,induction,bigram_ba,yolvantz snerrik yolvantz snerrik yolvantz,snerrik,17,15,True,0.8170029520988464, s,1.440340280532837,9.079933101123682
+p0167,induction,bigram_ab,grelth vundix grelth vundix grelth,vundix,16,14,True,0.9450625777244568, v,0.4865683615207672,7.580263823842159
+p0168,induction,bigram_ba,vundix grelth vundix grelth vundix,grelth,16,14,True,0.9450660943984985, gre,0.45935314893722534,7.565330994475552
+p0169,induction,bigram_ab,phorbal tessik phorbal tessik phorbal,tessik,13,11,True,0.7060962915420532, tes,1.7678627967834473,7.576621056688143
+p0170,induction,bigram_ba,tessik phorbal tessik phorbal tessik,phorbal,13,11,True,0.9488885998725891, ph,0.45703017711639404,7.518664907356633
+p0171,induction,bigram_ab,morvane klippet morvane klippet morvane,klippet,13,11,True,0.9294326901435852, k,0.6128349900245667,7.902554795975737
+p0172,induction,bigram_ba,klippet morvane klippet morvane klippet,morvane,14,12,True,0.9464361667633057, mor,0.4648463726043701,7.94794747608787
+p0173,induction,bigram_ab,zarnuk brimlow zarnuk brimlow zarnuk,brimlow,14,12,True,0.9400014877319336, brim,0.48237940669059753,7.834886637575145
+p0174,induction,bigram_ba,brimlow zarnuk brimlow zarnuk brimlow,zarnuk,14,12,True,0.9118947386741638, z,0.70872563123703,7.891806304002763
+p0175,induction,bigram_ab,havelin ruskett havelin ruskett havelin,ruskett,14,12,True,0.8890116214752197, rus,0.8566973209381104,7.254407245990772
+p0176,induction,bigram_ba,ruskett havelin ruskett havelin ruskett,havelin,13,11,True,0.9372687935829163, ha,0.5502895712852478,7.91811059692814
+p0177,induction,bigram_ab,dolvern mirquat dolvern mirquat dolvern,mirquat,11,9,True,0.9414222836494446, mir,0.49032992124557495,8.537424339801605
+p0178,induction,bigram_ba,mirquat dolvern mirquat dolvern mirquat,dolvern,11,9,True,0.9369587898254395, dol,0.5460219383239746,8.7427434641294
+p0179,entity_known_unknown,known|p00,Frida Kahlo was born in the year,,9,7,,0.8344625234603882, ,0.6658746004104614,7.340733808220875
+p0180,entity_known_unknown,unknown|p00,Frida Batkin was born in the year,,9,7,,0.8383222818374634, ,0.5575117468833923,7.354282046570936
+p0181,entity_known_unknown,known|p01,Mary Anning was born in the year,,9,7,,0.9282922148704529, ,0.37190112471580505,6.737323793368509
+p0182,entity_known_unknown,unknown|p01,Mary Delvano was born in the year,,9,7,,0.8446885347366333, ,0.6071426272392273,7.229061011621001
+p0183,entity_known_unknown,known|p02,Anne Bronte was born in the year,,9,7,,0.8688971996307373, ,0.5590148568153381,6.979855768759597
+p0184,entity_known_unknown,unknown|p02,Anne Renhold was born in the year,,9,7,,0.8299209475517273, ,0.6320913434028625,7.178861010869152
+p0185,entity_known_unknown,known|p03,Jane Goodall was born in the year,,9,7,,0.7033289670944214, ,1.2388333082199097,6.900830904596262
+p0186,entity_known_unknown,unknown|p03,Jane Voskell was born in the year,,9,7,,0.8189788460731506, ,0.7140483260154724,7.780320428320284
+p0187,entity_known_unknown,known|p04,Mary Leakey was born in the year,,9,7,,0.8369562029838562, ,0.7753647565841675,6.956847799548624
+p0188,entity_known_unknown,unknown|p04,Mary Brithers was born in the year,,9,7,,0.838901162147522, ,0.6523052453994751,6.950960183369226
+p0189,entity_known_unknown,known|p05,Dian Fossey was born in the year,,9,7,,0.8281899690628052, ,0.6345382332801819,7.5658276939850815
+p0190,entity_known_unknown,unknown|p05,Dian Belmore was born in the year,,9,7,,0.8257964253425598, ,0.6626574397087097,7.249853563999632
+p0191,entity_known_unknown,known|p06,Karen Horney was born in the year,,9,7,,0.8615760803222656, ,0.5394327044487,7.115075576537186
+p0192,entity_known_unknown,unknown|p06,Karen Hadric was born in the year,,9,7,,0.7536940574645996, ,0.7632791996002197,7.109753314452636
+p0193,entity_known_unknown,known|p07,Kathleen Lonsdale was born in the year,,9,7,,0.8175404071807861, ,0.7774852514266968,7.806058701185261
+p0194,entity_known_unknown,unknown|p07,Kathleen Corbell was born in the year,,9,7,,0.839059591293335, ,0.6459126472473145,7.283873171854566
+p0195,entity_known_unknown,known|p08,Marie Tharp was born in the year,,9,7,,0.8503820896148682, ,0.6251430511474609,6.95981330482556
+p0196,entity_known_unknown,unknown|p08,Marie Marwick was born in the year,,9,7,,0.856861412525177, ,0.5889049768447876,7.066687421984759
+p0197,entity_known_unknown,known|p09,Anita Brookner was born in the year,,9,7,,0.731620192527771, ,1.088451623916626,7.202103886550416
+p0198,entity_known_unknown,unknown|p09,Anita Denholm was born in the year,,9,7,,0.8411327004432678, ,0.626950204372406,7.444906128029132
+p0199,entity_known_unknown,known|p10,Barbara Pym was born in the year,,9,7,,0.5533298850059509, ,1.6846569776535034,6.881563092884608
+p0200,entity_known_unknown,unknown|p10,Barbara Faskin was born in the year,,9,7,,0.798780620098114, ,0.7720115184783936,7.252563932195339
+p0201,entity_known_unknown,known|p11,Amelia Earhart was born in the year,,9,7,,0.7776974439620972, ,0.9011812210083008,7.47830466451185
+p0202,entity_known_unknown,unknown|p11,Amelia Tremble was born in the year,,9,7,,0.866334855556488, ,0.5939089059829712,7.394032044883543
+p0203,entity_known_unknown,known|p12,Harriet Tubman was born in the year,,9,7,,0.8362576365470886, ,0.5740512013435364,7.338772216014636
+p0204,entity_known_unknown,unknown|p12,Harriet Ashden was born in the year,,9,7,,0.8737485408782959, ,0.5882666707038879,7.280790336120721
+p0205,entity_known_unknown,known|p13,Samuel Pepys was born in the year,,9,7,,0.8830466866493225, ,0.6079622507095337,7.169416692124368
+p0206,entity_known_unknown,unknown|p13,Samuel Holbeck was born in the year,,9,7,,0.8935054540634155, ,0.49452659487724304,7.456535522858906
+p0207,entity_known_unknown,known|p14,Robert Hooke was born in the year,,9,7,,0.8926398754119873, ,0.5376618504524231,6.99624469933186
+p0208,entity_known_unknown,unknown|p14,Robert Dressel was born in the year,,9,7,,0.8290532827377319, ,0.6372203230857849,7.0925449551706805
+p0209,entity_known_unknown,known|p15,Joseph Priestley was born in the year,,9,7,,0.9006466269493103, ,0.471511572599411,7.265082930987593
+p0210,entity_known_unknown,unknown|p15,Joseph Larkhem was born in the year,,9,7,,0.8457848429679871, ,0.6005675792694092,7.48952470573746
+p0211,obfuscated,rung0_clean|b00,The weather today is quite,,6,4,,0.12971092760562897, nice,3.854271411895752,6.625261000422964
+p0212,obfuscated,rung1_typos|b00,The waether today is quite,,7,5,,0.15987628698349, nice,3.809037685394287,7.197151829442968
+p0213,obfuscated,rung2_caps|b00,THE wEAtHeR tOdaY is QUITE,,14,12,,0.04577461630105972, c,5.436089515686035,8.511318590488814
+p0214,obfuscated,rung3_subst|b00,7h3 w34th3r t0day 1s quit3,,18,16,,0.09992913156747818, ,4.806406021118164,10.278898047330355
+p0215,obfuscated,rung0_clean|b01,Please open the front,,5,3,,0.4529796540737152, door,2.493877649307251,6.427524368370643
+p0216,obfuscated,rung1_typos|b01,Please open the fornt,,6,4,,0.27201297879219055, door,3.464108467102051,6.075418694496669
+p0217,obfuscated,rung2_caps|b01,PlEaSe oPeN tHe Front,,10,8,,0.07516653835773468, d,4.48240852355957,8.064886409051349
+p0218,obfuscated,rung3_subst|b01,Pl34s3 0p3n 7h3 fr0nt,,18,16,,0.31817665696144104, ,3.6024551391601562,10.966362018570592
+p0219,obfuscated,rung0_clean|b02,She wrote a long,,5,3,,0.16596394777297974, post,3.3463807106018066,6.327098531537898
+p0220,obfuscated,rung1_typos|b02,She wrtoe a long,,6,4,,0.2149864286184311, letter,3.4309568405151367,7.281595464717515
+p0221,obfuscated,rung2_caps|b02,sHE wRoTE a long,,8,6,,0.13472449779510498, letter,4.582400321960449,7.112408389060817
+p0222,obfuscated,rung3_subst|b02,5h3 wro7e a long,,10,8,,0.12405022978782654, time,4.5077972412109375,8.89072711951162
+p0223,obfuscated,rung0_clean|b03,They decided to leave the,,6,4,,0.10277926176786423, house,4.389859676361084,6.617672471364909
+p0224,obfuscated,rung1_typos|b03,Tehy decided to leave the,,7,5,,0.051072150468826294, game,5.235466003417969,6.827282195935347
+p0225,obfuscated,rung2_caps|b03,They dECIDeD to LeAVE ThE,,12,10,,0.4096623957157135,ir,3.4148881435394287,8.152053746160998
+p0226,obfuscated,rung3_subst|b03,Th3y d3cid3d 70 le4v3 7h3,,20,18,,0.19535721838474274, ,3.774862289428711,10.804519115602778
+p0227,obfuscated,rung0_clean|b04,He carried the heavy,,5,3,,0.16001325845718384, burden,3.9286880493164062,6.612406992783674
+p0228,obfuscated,rung1_typos|b04,He carreid the heavy,,6,4,,0.15841642022132874, burden,4.237375736236572,6.777939547095147
+p0229,obfuscated,rung2_caps|b04,He caRRIeD ThE HeaVY,,11,9,,0.04360201209783554, b,5.693676471710205,9.261459288055828
+p0230,obfuscated,rung3_subst|b04,He c4rri3d 7h3 h3avy,,15,13,,0.15117011964321136, ,4.187376022338867,9.916686268301861
+p0231,obfuscated,rung0_clean|b05,We travelled across the,,5,3,,0.22311997413635254, country,3.833559036254883,6.825856139535439
+p0232,obfuscated,rung1_typos|b05,We travelled acorss the,,7,5,,0.24949370324611664, country,3.797455310821533,6.486090829320282
+p0233,obfuscated,rung2_caps|b05,WE traVelLED ACRosS thE,,10,8,,0.060209207236766815, w,5.1658148765563965,8.488838612565498
+p0234,obfuscated,rung3_subst|b05,W3 tr4v3lled acr055 7he,,16,14,,0.22690404951572418, ,4.574455738067627,10.511961466975663
+p0235,obfuscated,rung0_clean|b06,I forgot to bring my,,6,4,,0.17065094411373138, camera,4.102726459503174,7.430214688341358
+p0236,obfuscated,rung1_typos|b06,I forgot to brnig my,,7,5,,0.1616801619529724, camera,4.280512809753418,7.935410065180901
+p0237,obfuscated,rung2_caps|b06,i FORgot TO BrINg my,,9,7,,0.03979495167732239, c,5.474017143249512,8.253515305033778
+p0238,obfuscated,rung3_subst|b06,1 f0rgo7 70 br1ng my,,14,12,,0.20368541777133942, ,4.532052040100098,9.626036336637767
+p0239,obfuscated,rung0_clean|b07,The train arrived at the,,6,4,,0.579348087310791, station,2.530531644821167,6.443814992837537
+p0240,obfuscated,rung1_typos|b07,The tarin arrived at the,,7,5,,0.11201361566781998, airport,4.782656669616699,6.386056936890592
+p0241,obfuscated,rung2_caps|b07,THE tRAiN ArRivEd at THe,,11,9,,0.053600069135427475, St,5.28580904006958,7.632680356356533
+p0242,obfuscated,rung3_subst|b07,The tr4in arr1v3d 47 th3,,15,13,,0.2673487663269043,r,3.6813573837280273,9.798639595557198
+p0243,obfuscated,rung0_clean|b08,The children played in the,,6,4,,0.15879613161087036, snow,3.7762699127197266,6.1948914442544725
+p0244,obfuscated,rung1_typos|b08,The children palyed in the,,8,6,,0.12578772008419037, snow,3.9506607055664062,6.133263981130553
+p0245,obfuscated,rung2_caps|b08,THE cHiLDREN PLaYEd iN tHE,,14,12,,0.07207862287759781, s,5.045361518859863,8.13148736511191
+p0246,obfuscated,rung3_subst|b08,7h3 ch1ldr3n pl4yed in th3,,15,13,,0.215224027633667,ir,4.279886245727539,9.957550929908974
+p0247,obfuscated,rung0_clean|b09,My sister bought a new,,6,4,,0.2203385829925537, car,3.753675937652588,6.741261480994557
+p0248,obfuscated,rung1_typos|b09,My ssiter bought a new,,7,5,,0.2263304889202118, car,3.801844358444214,6.968461285548542
+p0249,obfuscated,rung2_caps|b09,MY sIstEr bOughT a new,,11,9,,0.1483474224805832, car,4.506267070770264,8.123095764599675
+p0250,obfuscated,rung3_subst|b09,My s1s73r bough7 4 n3w,,15,13,,0.13492006063461304, ,5.202692985534668,10.50293496176898
+p0251,obfuscated,rung0_clean|b10,The river flows past the,,6,4,,0.09360085427761078, town,4.51683235168457,6.854698402987982
+p0252,obfuscated,rung1_typos|b10,The rvier flows past the,,7,5,,0.1328601837158203, dam,5.339962959289551,6.77387704830065
+p0253,obfuscated,rung2_caps|b10,the RiVeR flowS paST tHe,,11,9,,0.0726456567645073, b,5.504780292510986,7.967223158970773
+p0254,obfuscated,rung3_subst|b10,7he r1v3r fl0w5 p457 7h3,,20,18,,0.22133709490299225, ,3.8986239433288574,10.70223300716374

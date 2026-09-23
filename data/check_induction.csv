@@ -1,0 +1,25 @@
+category,subtype,prompt,expected,n_tok,base,pair,top1_prob,top1_token,next_token_entropy,mean_token_logid,is_copy,frag_len,cont,strict
+induction,bigram_ab,blorp trilve blorp trilve blorp,trilve,14,,,0.4714387059211731, tril,2.2045235633850098,8.843394013047368,True,4,trilveb,True
+induction,bigram_ba,trilve blorp trilve blorp trilve,blorp,14,,,0.8898512125015259, b,0.6907050609588623,8.426849417120412,True,1,blorp,True
+induction,bigram_ab,zandik wemplo zandik wemplo zandik,wemplo,11,,,0.9077950119972229, w,0.7690874338150024,8.577249904922002,True,1,wemplozan,True
+induction,bigram_ba,wemplo zandik wemplo zandik wemplo,zandik,11,,,0.9191824793815613, zan,0.6547744274139404,8.774467820878057,True,3,zandikw,True
+induction,bigram_ab,frugnat chelbis frugnat chelbis frugnat,chelbis,13,,,0.9339203238487244, che,0.578058123588562,9.55391730108061,True,3,chelbis,True
+induction,bigram_ba,chelbis frugnat chelbis frugnat chelbis,frugnat,13,,,0.8847845792770386, fru,0.9646821618080139,9.307519871769694,True,3,frugnatche,True
+induction,bigram_ab,vornik plaskew vornik plaskew vornik,plaskew,11,,,0.949255108833313, plas,0.46590501070022583,8.54965324764327,True,4,plaskewvor,True
+induction,bigram_ba,plaskew vornik plaskew vornik plaskew,vornik,11,,,0.7314743399620056, vor,2.041619300842285,9.008788660285022,True,3,vornikplas,True
+induction,bigram_ab,drimbo quathel drimbo quathel drimbo,quathel,11,,,0.8701373934745789, quat,0.947571337223053,8.82319394142656,True,4,quatheldri,True
+induction,bigram_ba,quathel drimbo quathel drimbo quathel,drimbo,11,,,0.882689893245697, dri,0.8851504325866699,8.801786527515254,True,3,drimboquat,True
+induction,bigram_ab,snerrik yolvantz snerrik yolvantz snerrik,yolvantz,16,,,0.9535902142524719, yol,0.3658100366592407,8.844430235802761,True,3,yolvantz,True
+induction,bigram_ba,yolvantz snerrik yolvantz snerrik yolvantz,snerrik,17,,,0.8170029520988464, s,1.440340280532837,9.079933101123682,True,1,snerrik,True
+induction,bigram_ab,grelth vundix grelth vundix grelth,vundix,16,,,0.9450625777244568, v,0.4865683615207672,7.580263823842159,True,1,vundix,True
+induction,bigram_ba,vundix grelth vundix grelth vundix,grelth,16,,,0.9450660943984985, gre,0.45935314893722534,7.565330994475552,True,3,grelth,True
+induction,bigram_ab,phorbal tessik phorbal tessik phorbal,tessik,13,,,0.7060962915420532, tes,1.7678627967834473,7.576621056688143,True,3,tessikph,True
+induction,bigram_ba,tessik phorbal tessik phorbal tessik,phorbal,13,,,0.9488885998725891, ph,0.45703017711639404,7.518664907356633,True,2,phorbal,True
+induction,bigram_ab,morvane klippet morvane klippet morvane,klippet,13,,,0.9294326901435852, k,0.6128349900245667,7.902554795975737,True,1,klippet,True
+induction,bigram_ba,klippet morvane klippet morvane klippet,morvane,14,,,0.9464361667633057, mor,0.4648463726043701,7.94794747608787,True,3,morvanek,True
+induction,bigram_ab,zarnuk brimlow zarnuk brimlow zarnuk,brimlow,14,,,0.9400014877319336, brim,0.48237940669059753,7.834886637575145,True,4,brimlowz,True
+induction,bigram_ba,brimlow zarnuk brimlow zarnuk brimlow,zarnuk,14,,,0.9118947386741638, z,0.70872563123703,7.891806304002763,True,1,zarnuk,True
+induction,bigram_ab,havelin ruskett havelin ruskett havelin,ruskett,14,,,0.8890116214752197, rus,0.8566973209381104,7.254407245990772,True,3,ruskettha,True
+induction,bigram_ba,ruskett havelin ruskett havelin ruskett,havelin,13,,,0.9372687935829163, ha,0.5502895712852478,7.91811059692814,True,2,havelin,True
+induction,bigram_ab,dolvern mirquat dolvern mirquat dolvern,mirquat,11,,,0.9414222836494446, mir,0.49032992124557495,8.537424339801605,True,3,mirquatdol,True
+induction,bigram_ba,mirquat dolvern mirquat dolvern mirquat,dolvern,11,,,0.9369587898254395, dol,0.5460219383239746,8.7427434641294,True,3,dolvernmir,True

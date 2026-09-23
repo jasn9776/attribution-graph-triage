@@ -1,0 +1,25 @@
+category,prompt,day2_hf,replacement_model,status,agree,agree_stripped
+arithmetic,48+35=,8,8,ok,True,True
+arithmetic,Adding the two numbers together we com,8,8,ok,True,True
+arithmetic,The sum 48+35=,8,8,ok,True,True
+code_completion,"np.array([1, 2, 3]).",reshape,reshape,ok,True,True
+code_completion,f = lambda x: x *, x, x,ok,True,True
+code_completion,"assert isinstance(x,", int, int,ok,True,True
+entity_known_unknown,Dian Belmore was born in the year, , ,ok,True,True
+entity_known_unknown,Karen Horney was born in the year, , ,ok,True,True
+entity_known_unknown,Harriet Ashden was born in the year, , ,ok,True,True
+factual_recall,Fact: The capital of Italy is, Rome, Rome,ok,True,True
+factual_recall,Fact: The capital of Thailand is, Bangkok, Bangkok,ok,True,True
+factual_recall,"They visited the capital of Norway, wh", Oslo, Oslo,ok,True,True
+induction,drimbo quathel drimbo quathel drimbo, quat, quat,ok,True,True
+induction,grelth vundix grelth vundix grelth, v, v,ok,True,True
+induction,plaskew vornik plaskew vornik plaskew, vor, vor,ok,True,True
+multi_hop,Someone who grew up in the city of Par, French, French,ok,True,True
+multi_hop,"Thinking about geography, the capital ", Springfield, Springfield,ok,True,True
+multi_hop,"Thinking about geography, the capital ", Austin, Austin,ok,True,True
+obfuscated,7h3 ch1ldr3n pl4yed in th3,ir,ir,ok,True,True
+obfuscated,The weather today is quite, nice, nice,ok,True,True
+obfuscated,They decided to leave the, house, house,ok,True,True
+syntactic_agreement,The dog ran across the, road, road,ok,True,True
+syntactic_agreement,Despite everything that had happened e, were, were,ok,True,True
+syntactic_agreement,"Earlier that morning, the keys to the ", were, were,ok,True,True

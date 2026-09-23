@@ -1,0 +1,47 @@
+{
+  "n_prompts": 255,
+  "per_category": {
+    "arithmetic": 28,
+    "code_completion": 29,
+    "entity_known_unknown": 32,
+    "factual_recall": 40,
+    "induction": 24,
+    "multi_hop": 32,
+    "obfuscated": 44,
+    "syntactic_agreement": 26
+  },
+  "max_tokens": 20,
+  "min_tokens": 5,
+  "fact_prefix": "Fact: ",
+  "filter": null,
+  "covariates": [
+    "n_tok",
+    "next_token_entropy",
+    "top1_prob",
+    "mean_token_logid"
+  ],
+  "length_eta2": 0.13091481990318063,
+  "length_eta2_no_mcq": 0.13091481990318063,
+  "entropy_eta2": 0.7531671332568183,
+  "r_entropy_ntok": -0.10852979722796455,
+  "induction_copy_rate": 1.0,
+  "entity_fisher_p": 6.77080814431494e-05,
+  "answer_rate_bare": 0.7222222222222222,
+  "answer_rate_fact": 0.8888888888888888,
+  "obfuscated_ladders": 11,
+  "n_short_interior": 27,
+  "induction_strict_rate": 1.0,
+  "syntax_agreement_constrained": 1.0,
+  "syntax_agreement_top1": 1.0,
+  "task_ok_by_category": {
+    "arithmetic": 0.9642857142857143,
+    "code_completion": null,
+    "entity_known_unknown": null,
+    "factual_recall": 0.8,
+    "induction": 1.0,
+    "multi_hop": 0.9375,
+    "obfuscated": null,
+    "syntactic_agreement": 1.0
+  },
+  "seed": 0
+}

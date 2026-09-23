@@ -1,0 +1,19 @@
+category,subtype,prompt,expected,n_tok,base,pair,top1_prob,top1_token,next_token_entropy,mean_token_logid,head_num,verb,margin,agree_ok
+syntactic_agreement,np_short,The keys to the cabinet,,6,,,0.27197355031967163, are,3.277021646499634,6.629816369786899,pl,pl,7.875,True
+syntactic_agreement,np_med,"Earlier that morning, the keys to the cabinet",,10,,,0.3811131715774536, were,2.6108639240264893,7.803734935617824,pl,pl,10.875,True
+syntactic_agreement,np_long,"Despite everything that had happened earlier that morning, the keys to the cabinet",,15,,,0.3674829304218292, were,3.284041166305542,7.822782042716289,pl,pl,10.375,True
+syntactic_agreement,np_short,The book on the shelves,,6,,,0.2749952971935272, of,3.109335422515869,6.483554582002447,sg,,-4.875,True
+syntactic_agreement,np_med,"Earlier that morning, the book on the shelves",,10,,,0.2714082598686218, of,3.110288143157959,7.715977862947153,sg,,-5.25,True
+syntactic_agreement,np_long,"Despite everything that had happened earlier that morning, the book on the shelves",,15,,,0.16149291396141052, was,3.5760583877563477,7.76427732760251,sg,sg,-6.875,True
+syntactic_agreement,np_short,The children in the garden,,6,,,0.14226466417312622, are,3.6218647956848145,6.231661980164968,pl,pl,9.375,True
+syntactic_agreement,np_med,"Earlier that morning, the children in the garden",,10,,,0.2925289571285248, had,3.0653481483459473,7.5648423018446636,pl,,15.375,True
+syntactic_agreement,np_long,"Despite everything that had happened earlier that morning, the children in the garden",,15,,,0.41811200976371765, were,2.983376979827881,7.663520286867519,pl,pl,17.8125,True
+syntactic_agreement,np_short,The author of the novels,,6,,,0.1991291344165802, ,2.8853397369384766,6.505673269509252,sg,,-5.875,True
+syntactic_agreement,np_med,"Earlier that morning, the author of the novels",,10,,,0.2131798416376114, ,3.163097858428955,7.729249075451236,sg,,-7.75,True
+syntactic_agreement,np_long,"Despite everything that had happened earlier that morning, the author of the novels",,15,,,0.1598760038614273, ,3.601949691772461,7.77312480260523,sg,,-8.25,True
+syntactic_agreement,np_short,The paintings in the gallery,,6,,,0.3263193368911743, are,3.247471809387207,6.64870675252384,pl,pl,11.125,True
+syntactic_agreement,np_med,"Earlier that morning, the paintings in the gallery",,10,,,0.2791762948036194, were,2.8150110244750977,7.815069165259989,pl,pl,13.5,True
+syntactic_agreement,np_long,"Despite everything that had happened earlier that morning, the paintings in the gallery",,15,,,0.3446987569332123, were,3.0691637992858887,7.830338195811067,pl,pl,13.75,True
+syntactic_agreement,np_short,The student with the notes,,6,,,0.08808087557554245, is,4.073665618896484,6.362767775937413,sg,sg,-5.125,True
+syntactic_agreement,np_med,"Earlier that morning, the student with the notes",,10,,,0.30776575207710266, had,3.462106704711914,7.643505779308131,sg,,-13.8125,True
+syntactic_agreement,np_long,"Despite everything that had happened earlier that morning, the student with the notes",,15,,,0.20754443109035492, in,3.64137601852417,7.715962605176496,sg,,-9.75,True

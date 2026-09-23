@@ -1,0 +1,44 @@
+{
+  "config_version": "day1-final",
+  "model": "google/gemma-2-2b",
+  "transcoders": "gemma",
+  "backend": "nnsight",
+  "dtype": "bfloat16",
+  "device": "cuda",
+  "lazy_encoder": true,
+  "n_layers": 26,
+  "split": "errors_first",
+  "reshape": "layer_major",
+  "attr_kwargs": {
+    "max_feature_nodes": 32768,
+    "batch_size": 32
+  },
+  "max_tokens": 20,
+  "tolerance": 0.0001,
+  "versions": {
+    "torch": "2.10.0+cu128",
+    "transformers": "4.57.3",
+    "transformer_lens": "3.2.1",
+    "circuit_tracer": "0.5.0",
+    "nnsight": "0.7.0",
+    "numpy": "2.0.2",
+    "scipy": "1.16.3",
+    "gpu": "Tesla T4"
+  },
+  "library_scores_reference": [
+    0.7198446989059448,
+    0.9268996715545654
+  ],
+  "noise_floor": {
+    "replacement_score": 5.4827189926554e-05,
+    "completeness_score": 1.6055365331224536e-05,
+    "mean_path_length": 3.9354167844063426e-05
+  },
+  "seconds_per_graph": 24.041666666666668,
+  "min_feature_headroom_pilot": 1700,
+  "metrics_impl": "graph_metrics_fast",
+  "fast_vs_slow_max_delta": 3.45e-08,
+  "pruning": "node_count_curve; library prune_graph on a 30-graph subsample",
+  "peak_gpu_gb_pilot": 12.3,
+  "min_feature_headroom_pilot_at_24576": 1700
+}

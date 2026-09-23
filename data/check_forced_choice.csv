@@ -1,0 +1,25 @@
+category,subtype,prompt,expected,n_tok,base,pair,top1_prob,top1_token,next_token_entropy,mean_token_logid,constrained,constrained_ok,top1_ok,picked_first
+multiple_choice,choice_xy,Everest is a river or mountain? Everest is a,mountain,12,,,0.5833316445350647, mountain,1.7738988399505615,7.6363233990753905,mountain,True,True,False
+multiple_choice,choice_yx,Everest is a mountain or river? Everest is a,mountain,12,,,0.7468339800834656, mountain,1.5293593406677246,7.6363233990753905,mountain,True,True,True
+multiple_choice,choice_xy,Copper is a metal or gas? Copper is a,metal,11,,,0.7079746723175049, metal,1.7791862487792969,7.636070432723741,metal,True,True,True
+multiple_choice,choice_yx,Copper is a gas or metal? Copper is a,metal,11,,,0.516762375831604, metal,2.446146011352539,7.636070432723741,metal,True,True,False
+multiple_choice,choice_xy,The largest planet is Mars or Jupiter? The largest planet is,Jupiter,13,,,0.5043818950653076, Jupiter,2.164652109146118,8.00196911823734,Jupiter,True,True,False
+multiple_choice,choice_yx,The largest planet is Jupiter or Mars? The largest planet is,Jupiter,13,,,0.7760014533996582, Jupiter,1.3709903955459595,8.00196911823734,Jupiter,True,True,True
+multiple_choice,choice_xy,Lemons are sour or sweet? Lemons are,sour,11,,,0.2602514624595642, sour,3.687159538269043,7.730981337932871,sour,True,True,True
+multiple_choice,choice_yx,Lemons are sweet or sour? Lemons are,sour,11,,,0.15065349638462067, sweet,3.886326789855957,7.730981337932871,sweet,False,False,True
+multiple_choice,choice_xy,The Nile is a river or desert? The Nile is a,river,13,,,0.6567650437355042, river,1.5335763692855835,7.641757724984482,river,True,True,True
+multiple_choice,choice_yx,The Nile is a desert or river? The Nile is a,river,13,,,0.4393441081047058, desert,1.786970853805542,7.641757724984482,desert,False,False,True
+multiple_choice,choice_xy,The symbol for gold is Ag or Au? The symbol for gold is,Au,15,,,0.5996595621109009, Ag,1.8832604885101318,7.332172951590747,Ag,False,False,True
+multiple_choice,choice_yx,The symbol for gold is Au or Ag? The symbol for gold is,Au,15,,,0.6895484328269958, Au,1.8535246849060059,7.332172951590747,Au,True,True,True
+multiple_choice,choice_xy,Shakespeare wrote Hamlet or Ulysses? Shakespeare wrote,Hamlet,9,,,0.5966792702674866, Hamlet,2.3177435398101807,9.167729851489337,Hamlet,True,True,True
+multiple_choice,choice_yx,Shakespeare wrote Ulysses or Hamlet? Shakespeare wrote,Hamlet,9,,,0.33262336254119873, Ulysses,3.1324801445007324,9.167729851489337,Ulysses,False,False,True
+multiple_choice,choice_xy,The Sun is a planet or star? The Sun is a,star,13,,,0.571373701095581, star,1.8468040227890015,7.184521936379958,star,True,True,False
+multiple_choice,choice_yx,The Sun is a star or planet? The Sun is a,star,13,,,0.8116223216056824, star,1.176191806793213,7.184521936379958,star,True,True,True
+multiple_choice,choice_xy,Ice is solid or gas? Ice is,solid,9,,,0.3646937310695648, solid,2.948051929473877,7.820011893927232,solid,True,True,True
+multiple_choice,choice_yx,Ice is gas or solid? Ice is,solid,9,,,0.28213363885879517, a,3.0602564811706543,7.820011893927232,gas,False,False,True
+multiple_choice,choice_xy,Paris is in Spain or France? Paris is in,France,11,,,0.5418823957443237, Spain,1.8698887825012207,7.540697033989068,Spain,False,False,True
+multiple_choice,choice_yx,Paris is in France or Spain? Paris is in,France,11,,,0.7131688594818115, France,1.5545740127563477,7.540697033989067,France,True,True,True
+multiple_choice,choice_xy,Whales are fish or mammals? Whales are,mammals,10,,,0.38085103034973145, mammals,2.6302146911621094,8.23866505335507,mammals,True,True,False
+multiple_choice,choice_yx,Whales are mammals or fish? Whales are,mammals,10,,,0.5542646646499634, mammals,2.2986109256744385,8.23866505335507,mammals,True,True,True
+multiple_choice,choice_xy,Mars is red or blue? Mars is,red,9,,,0.44201114773750305, red,2.7881522178649902,7.733222708171279,red,True,True,True
+multiple_choice,choice_yx,Mars is blue or red? Mars is,red,9,,,0.2879183888435364, blue,3.252013921737671,7.733222708171279,blue,False,False,True

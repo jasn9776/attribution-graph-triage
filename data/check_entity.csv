@@ -1,0 +1,33 @@
+name,kind,generated,year,round
+Frida Kahlo,known,1907 in,1907,False
+Frida Batkin,unknown,1990 in,1990,True
+Mary Anning,known,1799 in,1799,False
+Mary Delvano,unknown,1920 in,1920,True
+Anne Bronte,known,1820.,1820,True
+Anne Renhold,unknown,1960 in,1960,True
+Jane Goodall,known,1934 in,1934,False
+Jane Voskell,unknown,1940 in,1940,True
+Mary Leakey,known,1913.,1913,False
+Mary Brithers,unknown,1900 in,1900,True
+Dian Fossey,known,1932 in,1932,False
+Dian Belmore,unknown,1950 in,1950,True
+Karen Horney,known,1885 in,1885,True
+Karen Hadric,unknown,1960 in,1960,True
+Kathleen Lonsdale,known,1903 in,1903,False
+Kathleen Corbell,unknown,1950 in,1950,True
+Marie Tharp,known,1920.,1920,True
+Marie Marwick,unknown,1900 in,1900,True
+Anita Brookner,known,1928 in,1928,False
+Anita Denholm,unknown,1940 in,1940,True
+Barbara Pym,known,"1913,",1913,False
+Barbara Faskin,unknown,1935 in,1935,True
+Amelia Earhart,known,1897.,1897,False
+Amelia Tremble,unknown,1890 in,1890,True
+Harriet Tubman,known,1820 in,1820,True
+Harriet Ashden,unknown,1850 in,1850,True
+Samuel Pepys,known,1633.,1633,False
+Samuel Holbeck,unknown,1600 in,1600,True
+Robert Hooke,known,1635 in,1635,True
+Robert Dressel,unknown,1940 in,1940,True
+Joseph Priestley,known,1733 in,1733,False
+Joseph Larkhem,unknown,1900 in,1900,True

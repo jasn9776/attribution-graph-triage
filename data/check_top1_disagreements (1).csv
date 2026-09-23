@@ -1,0 +1,7 @@
+prompt_id,category,prompt,top1_token,rm_top1_token,expected,task_ok,rm_would_answer
+p0008,factual_recall,"When travelling abroad last year they visited the capital of Italy, which is", also, Rome,Rome,False,True
+p0013,factual_recall,"They visited the capital of Brazil, which is", the, also,Brasilia,False,False
+p0087,syntactic_agreement,She poured the water into the, glass, bowl,,,
+p0117,multi_hop,A person born in Rome usually speaks, with, Italian,Italian,False,True
+p0219,obfuscated,She wrote a long, post, letter,,,
+p0237,obfuscated,i FORgot TO BrINg my, c, camera,,,
