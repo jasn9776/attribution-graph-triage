@@ -1,0 +1,14 @@
+cat,n_tok,attr_s,metric_s,total_s,features,headroom,rep,comp,pos_gini,err_bos,err_final,peak_gb,prompt
+factual,6,5.6,0.03,5.7,4409,20167,0.727,0.936,0.26,0.0,0.0,5.9,The capital of France is
+factual,8,8.4,0.07,8.4,6368,18208,0.712,0.929,0.16,0.0,0.0,5.8,Fact: the capital of France is
+arithmetic,7,6.3,0.04,6.4,4436,20140,0.708,0.933,0.27,0.0,0.0,5.7,48+35=
+syntax,15,29.8,0.31,30.1,14241,10335,0.762,0.943,0.3,0.0,0.0,8.3,Despite everything that had happ
+multi_hop,11,14.4,0.14,14.6,9167,15409,0.728,0.936,0.22,0.0,0.0,6.4,Fact: the capital of the state c
+code,11,14.8,0.13,14.9,8795,15781,0.736,0.935,0.53,0.0,0.0,6.4,"def add(a, b):
+    return"
+induction,16,48.2,0.79,49.0,22876,1700,0.757,0.942,0.41,0.0,0.0,12.3,snerrik yolvantz snerrik yolvant
+induction,14,38.5,0.59,39.1,19789,4787,0.729,0.933,0.23,0.0,0.0,10.6,blorp trilve blorp trilve blorp
+mcq,17,33.3,0.34,33.7,14677,9899,0.678,0.912,0.4,0.0,0.0,8.5,Sun is a: (a) planet (b) star. A
+entity,9,11.8,0.11,11.9,8555,16021,0.686,0.937,0.36,0.0,0.0,6.3,Frida Batkin was born in the yea
+obfuscated,20,47.4,0.55,47.9,18801,5775,0.704,0.927,0.27,0.0,0.0,10.1,Th3y d3cid3d 70 le4v3 7h3
+obfuscated,12,26.4,0.35,26.8,15124,9452,0.721,0.935,0.32,0.0,0.0,8.4,They dECIDeD to LeAVE ThE

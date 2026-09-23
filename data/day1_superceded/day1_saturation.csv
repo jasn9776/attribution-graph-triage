@@ -1,0 +1,5 @@
+n_tok,secs,features,cap,headroom,err_final,peak_gb,prompt
+17,189.4,17495.0,24576.0,7081.0,0.0,6.3,After the long meeting finally ended eve
+22,259.6,,,,,,FAILED ValueError: feature cap saturated: 24576 >= 24576
+9,50.7,9296.0,24576.0,15280.0,0.0,5.8,Frida Kahlo was born in the year
+17,123.6,14677.0,24576.0,9899.0,0.0,6.2,Sun is a: (a) planet (b) star. Answer: (
