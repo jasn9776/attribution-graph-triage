@@ -663,3 +663,97 @@ Library pruning curve computed on 32 graphs (4 per category, random_state = 0). 
 The maximum difference of 3.4×10⁻⁴ (p0167, induction) was traced to re-attribution, not to the fast path. On that prompt, graph_metrics_fast and compute_graph_scores agree to 1.1×10⁻⁶ on the same graph, while two attributions of the same prompt differ by 2.1×10⁻⁴. Signed differences across the 32-graph subsample are balanced (18 positive, 14 negative; mean +1.6×10⁻⁵), as expected of noise rather than a systematic gap.
 
 Noise floor revised. The Day 1 figure of 5×10⁻⁵ came from a single short prompt and understates the general case. Across 32 graphs spanning all categories, re-attribution varies replacement score by a median of 9.0×10⁻⁵ and a maximum of 3.4×10⁻⁴; the variation is not simply a function of graph size. Section 6.4 is updated accordingly: category differences smaller than ~10⁻³ are treated as not meaningful. The observed cross-prompt spread in replacement (~0.07) is about 200× the maximum.
+
+
+### D3.11 — rating design extended to three streams [27-09-2026]
+
+**Written before any graph is rated.** Extends D3.8 with two exploratory LLM streams. There
+remains a **single human rater**. D3.8's rubric, sampling (8 quantile bins × 5, `random_state = 0`), 10 unmarked duplicates, randomised
+order and 5-minute cap are unchanged. P5 remains the **single-rater** result from stream 1; the
+other two streams are exploratory and cannot change it.
+
+| # | Stream | Status | Sees |
+|---|---|---|---|
+| 1 | Human rater (JS) | **confirmatory — this is P5** | diagram + text, no metrics |
+| 2 | LLM rater, independent | exploratory | text only, no metrics |
+| 3 | LLM audit of stream 1's reasoning | exploratory | text + stream 1's rating and stated reason |
+
+**Order and blinding.** Stream 1 runs first and in isolation. Streams 2 and 3 run only after all 50
+of stream 1's ratings are recorded, and neither gives feedback to the rater during rating: a
+mid-run correction would mean the 50 ratings were made under two different standards, and the
+duplicate-based kappa would measure training rather than consistency.
+
+**Single human rater.** The 10 unmarked duplicates measure intra-rater consistency — whether the
+criteria are applied stably. **Inter-rater reliability is not measured.** Agreement with the LLM
+rater is not a substitute: it sees the text only and applies the human rater's own written rubric,
+so it tests whether the criteria are articulable, not whether they are shared.
+
+**Presentation, corrected from D3.8.** D3.8 said graphs would be viewed "pruned at node threshold
+0.8 in the circuit-tracer graph viewer". They are instead viewed through `circuit_view.explain()`:
+an orientation summary (prediction, token influence, error by token position, feature influence by
+layer third), a labelled path diagram of the backward-reachable subgraph from the predicted logit,
+and a deduplicated text trace of the same subgraph. Settings `depth=4, width=4, min_w=0.01,
+keep_min=3`, identical for all presentations and recorded in `calibration.json`. Feature
+descriptions are Neuronpedia's published explanations for the GemmaScope transcoders; these are
+automatically generated from top activating examples and describe what a feature fires on, not what
+it computes, so a misleading label could push a rating either way.
+
+**Mandatory reasoning.** Every rating requires a stated reason of at least 20
+characters, recorded with the rating, and the exact text shown is stored per presentation. This is
+what makes stream 3 possible and is worth recording regardless.
+
+**Stream 2, LLM rater.** Each presentation is rated from the identical stored text and the identical
+rubric, and nothing else, in an order shuffled with a fixed seed. The duplicates are present for it
+too, so its own intra-rater consistency is measurable. Reported: quadratic weighted kappa with
+stream 1, its own duplicate kappa, and its Spearman correlation with replacement score.
+
+**Delivery, and its cost.** Streams 2 and 3 are run through a chat interface rather than the API,
+in batches of ten presentations, each batch pasted into a fresh chat with the rubric repeated in
+full at its head. Unlike separate API calls, presentations within a batch share context, so the
+judge's ratings are **not independent across presentations** and may anchor on earlier items in the
+same batch. This is reported rather than corrected; both streams are exploratory, and the
+dependence inflates their apparent internal consistency more than their agreement with stream 1.
+
+**No duplicate pair shares a batch.** A duplicate appearing in the same context window as its twin
+could be recognised as a repeat — something the human rater cannot do — which would make the LLM's
+duplicate consistency uninterpretable. The batch assignment is derived from the same seeded shuffle
+and then adjusted by the minimum number of swaps needed to separate every pair; the swaps made and
+the final order are recorded in `llm_batch_plan.json`. The assignment is verified before the batch
+files are written, and the export fails rather than proceeding if any pair remains together.
+
+The interface and model used are recorded in `day5_summary.json`.
+
+**Stream 3, LLM audit.** For each presentation the judge receives the stored text, the rubric, and
+stream 1's rating and stated reason. It answers two questions separately: does the stated reason
+follow from the graph, and does the rating follow from the stated reason. Reported as two rates:
+outright rating disagreement, and **rating defensible but stated reason not supported** — the
+second is the interesting one and is rarely reported in rating studies.
+
+**What the LLM streams are not.** They see the text, not the diagram, and judge whether a written
+description reads as a mechanism. That is closer to "is this description coherent" than "did a
+human understand the circuit". They can catch rule misapplication — a 2 awarded where the trace
+footer reports zero cross-position edges — but not a misreading of the graph that rater and judge
+share. Their duplicate-pair consistency remains weaker evidence than the human rater's, since
+batch membership is still shared context even when the twin is elsewhere.
+
+**Pre-specified interpretation.** If stream 2 correlates with replacement score in the same
+direction as stream 1, the P5 finding is less likely to be an artefact of the human rater's
+non-blindness to the hypotheses — though the two are not independent, since stream 2 applies stream
+1's written rubric. If stream 3 finds a high rate of "defensible rating, unsupported reason", that
+is reported as a limitation of the rubric's reliability, not as a correction to the ratings.
+
+**Rubric clarifications fixed before rating**, recorded in `calibration.json` and derived from ten
+practice graphs outside the rated sample:
+
+- A **2** requires *both* a cross-position edge (the trace footer reports ≥ 1) *and* a named
+  intermediate feature at a non-final token position. A crossing without an intermediate is routing
+  (raw token embeddings reaching the logit), not computation; an intermediate without a crossing is
+  the read-out token elaborating itself, which the prompt largely implies.
+- A feature is unreadable when an error node is its **largest** input, or when error nodes are most
+  of its inputs. Error elsewhere in the tree does not disqualify it.
+- Magnitude is not part of the rating: a complete named chain is a 2 however small its weights.
+  Chains weaker than the direct token-to-logit edge are flagged in the reason and split out at
+  analysis.
+- A label counts as naming only if it is specific and plausible for the position it sits on. A label
+  that merely contains the predicted word is not an intermediate unless something upstream produced
+  it.
