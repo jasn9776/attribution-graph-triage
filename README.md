@@ -2,8 +2,9 @@
 
 **Can cheap properties of a prompt predict whether its attribution graph is worth reading?**
 
-> **Status: day 3 complete.** 255 graphs collected. Human rating in progress, blind — the rating
-> notebook is committed before any rating is performed. Results not yet analysed.
+> **Status: day 3 complete, 255 graphs collected. Blind human rating in progress.** The rating
+> notebook, the sample manifest and the rating criteria were all committed before any graph was
+> rated. Outcome distributions are not reported here until the rating is finished.
 
 ---
 
@@ -77,7 +78,8 @@ category above n = 20, so entropy and top-1 probability are carried as covariate
 avoids imposing uneven selection pressure across categories.
 
 **Validation:** 40 graphs hand-rated blind on a 3-point "did I learn a mechanism" scale, with 10
-unmarked duplicates for intra-rater reliability, correlated against the automated metrics.
+unmarked duplicates for intra-rater consistency, correlated against the automated metrics. Protocol
+below.
 
 ## Category validation
 
@@ -100,7 +102,62 @@ their own state capital, making the answer copyable without a second hop.
 **Multiple choice was dropped.** Gemma-2-2B (base) does not bind answers to option letters: the
 arrow format continued the option list (12/12 predicted `c`, a non-existent option) and the answer
 format defaulted to `a` (chosen 75% of the time; 58% accuracy against a 42% always-`a` baseline).
-A redesign as forced choice between two in-context option words also failed: 79% of choices went to the first-listed option, and all seven errors were first-listed picks. The paired design makes the mechanism visible — the same item is answered correctly when the correct option is listed first and incorrectly when it is listed second (e.g. Paris is in Spain or France → Spain; Paris is in France or Spain → France). Repeating the stem creates an induction pattern, and in-context copying overrides factual knowledge.
+A redesign as forced choice between two in-context option words also failed — 79% of choices went
+to the first-listed option, because repeating the stem created an induction pattern and in-context
+copying overrode factual knowledge. Per a rule fixed before the check was run, the category was
+dropped rather than redesigned a third time.
+
+## Human rating protocol
+
+The project's secondary question — does replacement score track whether a *person* can extract a
+mechanism — needs a human judgement, so how the graph is displayed is part of the method rather
+than a convenience.
+
+**Sampling.** Replacement scores of all 255 graphs are split into 8 quantile bins and 5 graphs drawn
+from each, giving 40 that span the range rather than clustering in the middle. 10 of the 40 are
+re-inserted unmarked and the 50 shuffled, so intra-rater consistency is measurable.
+
+**Rubric**, fixed before any graph was viewed:
+
+| | |
+|---|---|
+| **2** | a causal path from input to output, stated in one sentence, naming the intermediate features |
+| **1** | at least one meaningful intermediate feature identifiable, but no complete path |
+| **0** | neither |
+
+Two mechanical checks before a 2: the trace reports at least one cross-position edge, **and** a
+named feature in the chain sits at a non-final token position. A crossing without an intermediate
+is routing rather than computation — raw token embeddings reaching the logit through the residual
+stream. An intermediate without a crossing is the read-out token elaborating itself, which the
+prompt largely implies. Full criteria, including the treatment of error-fed features and vague
+labels, are in `data/calibration.json`, written after ten practice graphs drawn from outside the
+rated sample.
+
+**Presentation.** `circuit_view.explain()`: a four-line orientation summary, a labelled path diagram
+of the backward-reachable subgraph from the predicted logit, and a deduplicated text trace of the
+same subgraph. Settings `depth=4, width=4, min_w=0.01, keep_min=3`, identical for all 50. Feature
+descriptions come from Neuronpedia's published explanations for the GemmaScope transcoders. No
+metric is shown until every rating is recorded, and every rating requires a written reason.
+
+**Three streams**, pre-registered before any rating:
+
+| # | Stream | Status | Sees |
+|---|---|---|---|
+| 1 | Human rater | confirmatory — this is the reported result | diagram + text |
+| 2 | LLM rater, independent | exploratory | text only |
+| 3 | LLM audit of stream 1's stated reasoning | exploratory | text + stream 1's rating and reason |
+
+Streams 2 and 3 run only after all 50 human ratings are recorded, and give no feedback during
+rating: a mid-run correction would mean the 50 were rated under two standards, and the
+duplicate-based consistency estimate would measure training rather than stability. Both are
+delivered as batches of ten pasted into fresh chats; **no duplicate pair shares a batch**, since a
+duplicate in the same context as its twin could be recognised as a repeat, which the human rater
+cannot do.
+
+Stream 3 reports two rates separately: outright rating disagreement, and **defensible rating with
+an unsupported stated reason** — the second is rarely measured in rating studies and is possible
+here only because the reasoning is recorded alongside the exact text shown.
+
 
 ## Reproducing this
 
@@ -184,10 +241,10 @@ preference here, it is the only option.
 ```
 notebooks/
   day1_final.ipynb              environment, frozen config, metric validation, timing
-  day1-v4-setup-and-metrics-OLD.ipynb   superseded Day 1 notebook, kept as a record
   day2_final_v2.ipynb           corpus generation, length balance, category validation
   day3_corpus_run.ipynb         opening checks and the resumable corpus loop
-  day5_rating.ipynb             blind rating protocol (committed before rating)
+  day5_rating_three_streams.ipynb  practice, blind rating, and the two LLM streams
+                                (committed before any rating was performed)
 ct_utils.py                     the metric pipeline, shared by every notebook
 preregistration.md              written before data collection, append-only
 data/
@@ -199,7 +256,15 @@ data/
   check_*.csv                   manipulation checks: induction, entity, syntax, answer mode,
                                 forced choice (failed), model consistency
   pruning_agreement.csv         node-count curve vs the library's pruning curve
+  calibration.json              rating criteria, fixed after practice and before rating
+  rating_manifest.csv           the 50 presentations, in order, with no metric columns
+  graph_texts.jsonl             the exact text shown for each presentation
+  ratings_*.jsonl               ratings and written reasons, per stream
+  llm_batch_plan.json           batch assignment for the LLM streams, and any swaps made
 ```
+
+Rating outputs appear once the rating is complete; the manifest and calibration are committed
+beforehand, so the sample and the criteria are on record before any graph was seen.
 
 Notebooks are committed without outputs. The numbers they produced live in `data/` and in the
 deviations log of `preregistration.md`.
@@ -217,6 +282,11 @@ iteration is far cheaper at 10,000+ nodes. Two assertions guard the pipeline —
 since all backward influence must be absorbed at nodes with no inputs and there are only two such
 kinds, and early series termination, since a non-terminating series means the adjacency is
 transposed.
+
+`circuit_view.py` is the viewer used for the human rating and is part of the method: the rating
+asks whether a person can read a graph, so what they were shown matters. Edge selection there is
+top-k first and threshold second — weights are row-normalised, so a high fan-in node (the logit has
+thousands of incoming edges) has tiny weights throughout, and a fixed threshold empties the graph.
 
 An earlier implementation disagreed with the library by ~0.008. That was traced to the logit
 mis-ordering described above rather than to a difference of method, and is documented in the
@@ -245,7 +315,12 @@ Outcome distributions are deliberately not reported here until the blind human r
   MLP or merely something correlated with its output — requires per-graph intervention experiments
   and is out of scope. This is the deepest limitation.
 - Prompt categories are hand-defined and not exhaustive.
-- Human validation is single-rater and not blind to the project's hypotheses.
+- Human validation is **single-rater** and not blind to the project's hypotheses. The 10 duplicates
+  measure intra-rater consistency; inter-rater reliability is not measured. Agreement with the LLM
+  rater is not a substitute — it sees the text only and applies the human rater's own written
+  rubric, so it tests whether the criteria are articulable, not whether they are shared.
+- Feature descriptions are Neuronpedia's automated explanations: they describe what a feature fires
+  on, not what it computes, so a misleading label could push a rating either way.
 
 ## Credits
 
