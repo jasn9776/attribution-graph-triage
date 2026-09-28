@@ -757,3 +757,7 @@ practice graphs outside the rated sample:
 - A label counts as naming only if it is specific and plausible for the position it sits on. A label
   that merely contains the predicted word is not an intermediate unless something upstream produced
   it.
+
+
+**Rubric clarifications added after practice, before rating [28-09-2026].**
+Three points were underspecified and are now fixed in calibration.json: (a) precedence — the 0 conditions are applied first, and "the explanation restates the prompt" overrides the naming-based 1 conditions, so a path whose content reduces to "the token appeared earlier" is a 0 however its features are labelled; (b) crossings count only feature-to-feature edges across positions, since a token embedding reaching a later position is the residual stream carrying the raw token rather than transported computation; (c) the two mechanical checks for a 2 are necessary but not sufficient — the error rule and the label rule still apply afterwards. All three were derived from practice graphs drawn from outside the rated sample, before any rated graph was seen.
