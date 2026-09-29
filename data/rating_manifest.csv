@@ -1,0 +1,57 @@
+presentation,prompt_id,category,subtype,prompt,n_tok
+1,p0204,entity_known_unknown,unknown|p12,Harriet Ashden was born in the year,9
+2,p0119,multi_hop,city_language,A person born in Moscow usually speaks,8
+3,p0061,arithmetic,bare_long,Adding the two numbers together we compute that 24+17=,16
+4,p0205,entity_known_unknown,known|p13,Samuel Pepys was born in the year,9
+5,p0132,code_completion,code,"def f():
+    pass
+
+f(",10
+6,p0218,obfuscated,rung3_subst|b01,Pl34s3 0p3n 7h3 fr0nt,18
+7,p0159,induction,bigram_ab,frugnat chelbis frugnat chelbis frugnat,13
+8,p0061,arithmetic,bare_long,Adding the two numbers together we compute that 24+17=,16
+9,p0242,obfuscated,rung3_subst|b07,The tr4in arr1v3d 47 th3,15
+10,p0222,obfuscated,rung3_subst|b02,5h3 wro7e a long,10
+11,p0158,induction,bigram_ba,wemplo zandik wemplo zandik wemplo,11
+12,p0090,syntactic_agreement,fill_short,The dog ran across the,6
+13,p0221,obfuscated,rung2_caps|b02,sHE wRoTE a long,8
+14,p0063,arithmetic,bare_long,Adding the two numbers together we compute that 72+19=,16
+15,p0047,arithmetic,bare_short,83+12=,7
+16,p0158,induction,bigram_ba,wemplo zandik wemplo zandik wemplo,11
+17,p0247,obfuscated,rung0_clean|b09,My sister bought a new,6
+18,p0047,arithmetic,bare_short,83+12=,7
+19,p0048,arithmetic,bare_short,46+39=,7
+20,p0186,entity_known_unknown,unknown|p03,Jane Voskell was born in the year,9
+21,p0100,multi_hop,state_capital,Fact: The capital of the state containing Detroit is,11
+22,p0198,entity_known_unknown,unknown|p09,Anita Denholm was born in the year,9
+23,p0218,obfuscated,rung3_subst|b01,Pl34s3 0p3n 7h3 fr0nt,18
+24,p0069,syntactic_agreement,np_med,"Earlier that morning, the keys to the cabinet",10
+25,p0116,multi_hop,city_language,A person born in Madrid usually speaks,8
+26,p0195,entity_known_unknown,known|p08,Marie Tharp was born in the year,9
+27,p0065,arithmetic,bare_long,Adding the two numbers together we compute that 61+44=,16
+28,p0174,induction,bigram_ba,brimlow zarnuk brimlow zarnuk brimlow,14
+29,p0242,obfuscated,rung3_subst|b07,The tr4in arr1v3d 47 th3,15
+30,p0176,induction,bigram_ba,ruskett havelin ruskett havelin ruskett,13
+31,p0122,multi_hop,city_language_long,Someone who grew up in the city of Berlin would normally speak,13
+32,p0185,entity_known_unknown,known|p03,Jane Goodall was born in the year,9
+33,p0035,factual_recall,capital_long,"When travelling abroad last year they visited the capital of Cuba, which is",15
+34,p0122,multi_hop,city_language_long,Someone who grew up in the city of Berlin would normally speak,13
+35,p0022,factual_recall,capital_med,"They visited the capital of Peru, which is",10
+36,p0056,arithmetic,prefixed_med,The sum 53+28=,10
+37,p0133,code_completion,code,"a, b = 1, 2
+a, b = b,",17
+38,p0065,arithmetic,bare_long,Adding the two numbers together we compute that 61+44=,16
+39,p0092,syntactic_agreement,fill_short,We put the boxes under the,7
+40,p0026,factual_recall,capital_long,"When travelling abroad last year they visited the capital of Thailand, which is",15
+41,p0136,code_completion,code,"data = {}
+data['key'] =",10
+42,p0133,code_completion,code,"a, b = 1, 2
+a, b = b,",17
+43,p0163,induction,bigram_ab,drimbo quathel drimbo quathel drimbo,11
+44,p0055,arithmetic,prefixed_med,The sum 72+19=,10
+45,p0186,entity_known_unknown,unknown|p03,Jane Voskell was born in the year,9
+46,p0103,multi_hop,state_capital_long,"Thinking about geography, the capital of the state containing Chicago is",13
+47,p0093,syntactic_agreement,fill_short,You can find the keys on the,8
+48,p0198,entity_known_unknown,unknown|p09,Anita Denholm was born in the year,9
+49,p0015,factual_recall,capital_short,Fact: The capital of Kenya is,8
+50,p0023,factual_recall,capital_long,"When travelling abroad last year they visited the capital of Peru, which is",15
