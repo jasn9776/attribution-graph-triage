@@ -665,7 +665,15 @@ The maximum difference of 3.4×10⁻⁴ (p0167, induction) was traced to re-attr
 Noise floor revised. The Day 1 figure of 5×10⁻⁵ came from a single short prompt and understates the general case. Across 32 graphs spanning all categories, re-attribution varies replacement score by a median of 9.0×10⁻⁵ and a maximum of 3.4×10⁻⁴; the variation is not simply a function of graph size. Section 6.4 is updated accordingly: category differences smaller than ~10⁻³ are treated as not meaningful. The observed cross-prompt spread in replacement (~0.07) is about 200× the maximum.
 
 
-### D3.11 — rating design extended to three streams [27-09-2026]
+### D3.11 — rating design extended to three streams [27-09-2026 -> edited 29-09-2026]
+
+<!--
+Append to the Deviations log, after the D3.5 diagnosis entry.
+Written BEFORE any rating is performed. Replace [DATE] with the time you paste it.
+Nothing above is edited.
+-->
+
+### D3.11 — rating design extended to three streams [DATE]
 
 **Written before any graph is rated.** Extends D3.8 with two exploratory LLM streams. There
 remains a **single human rater**. D3.8's rubric, sampling (8 quantile bins × 5, `random_state = 0`), 10 unmarked duplicates, randomised
@@ -742,22 +750,57 @@ non-blindness to the hypotheses — though the two are not independent, since st
 1's written rubric. If stream 3 finds a high rate of "defensible rating, unsupported reason", that
 is reported as a limitation of the rubric's reliability, not as a correction to the ratings.
 
-**Rubric clarifications fixed before rating**, recorded in `calibration.json` and derived from ten
-practice graphs outside the rated sample:
+### Calibration, completed before any rated graph was seen
 
-- A **2** requires *both* a cross-position edge (the trace footer reports ≥ 1) *and* a named
-  intermediate feature at a non-final token position. A crossing without an intermediate is routing
-  (raw token embeddings reaching the logit), not computation; an intermediate without a crossing is
-  the read-out token elaborating itself, which the prompt largely implies.
-- A feature is unreadable when an error node is its **largest** input, or when error nodes are most
-  of its inputs. Error elsewhere in the tree does not disqualify it.
-- Magnitude is not part of the rating: a complete named chain is a 2 however small its weights.
-  Chains weaker than the direct token-to-logit edge are flagged in the reason and split out at
-  analysis.
-- A label counts as naming only if it is specific and plausible for the position it sits on. A label
-  that merely contains the predicted word is not an intermediate unless something upstream produced
-  it.
+The rubric in D3.8 states three grades but does not say how to apply them to a real graph. The
+criteria below were developed on practice material and frozen in `calibration.json`, which is
+committed before rating begins.
 
+**Practice material.** Two kinds, neither drawn from the 40 rated graphs. (a) Constructed examples
+in the identical output format, written to span the grades and to include specific traps: a
+well-formed graph whose explanation restates the prompt, a real intermediate sitting only at the
+read-out position, a chain whose features are fed by error nodes, a label that contains the
+predicted word. (b) Real graphs sampled from the 215 corpus prompts outside the rated sample, with
+the selection asserted disjoint from the manifest, covering every category including the three the
+first practice round did not reach (code completion, known/unknown entity, syntactic agreement).
+
+**Criteria fixed, in application order:**
+
+1. **Precedence.** The 0 conditions are checked first. "The explanation restates the prompt" is
+   about *content* and overrides the 1 conditions, which are about *naming*: a path whose content
+   reduces to "the token appeared earlier" is a 0 however its features are labelled. Then the error
+   rule, then the label rule, then the 2 checks.
+2. **The two checks for a 2 are necessary, not sufficient.** The trace footer must report ≥ 1
+   cross-position edge *and* a named feature must sit at a non-final position. Both can pass and
+   the graph still be a 0 or 1 once the error and label rules are applied — this occurred on
+   several practice graphs.
+3. **Crossings count only feature-to-feature edges** across positions. A token embedding reaching a
+   later position is the residual stream carrying the raw token, not transported computation.
+4. **Error rule.** A feature is unreadable when an error node is its *largest* input, or when error
+   nodes are most of its inputs. Error elsewhere in the tree does not disqualify it.
+5. **Label rule.** A label counts as naming only if it is specific *and plausible for the position
+   it sits on*. Neuronpedia descriptions come from top activating examples in natural text, so on
+   off-distribution input a feature fires for reasons unrelated to its description — «year» on a
+   nonce token, «mentions of proteins» on a Python parameter name. Such a label does not name an
+   intermediate. Nor does a label that merely contains the predicted word, unless something
+   upstream produced it.
+6. **Influence rule.** Magnitude is not part of the rating: a complete named chain is a 2 however
+   small its weights. Chains weaker than the direct token-to-logit edge are flagged in the reason
+   and split out at analysis.
+7. **Naming rule.** Strict — a 2 requires naming the intermediate from its Neuronpedia description.
+
+**Convergence.** Practice continued until the rater's grades matched a fixed reference set. The
+final round of real graphs, covering the three previously unpractised categories, agreed on five of
+six, with the single disagreement decided by the label rule. Practice was then stopped: further
+calibration has diminishing returns and costs attention that the 50 ratings need.
+
+**Disclosure: the criteria were developed in discussion with an LLM assistant**, which proposed
+reference gradings for the practice material and corrected the rater's reasoning. This creates a
+dependence between stream 1's criteria and streams 2 and 3, which are LLM-based and are given
+stream 1's written rubric. Agreement between the human and the LLM streams is therefore **not**
+evidence of independent convergence and must not be read as such; it measures whether criteria of
+this origin can be applied consistently from the text alone. This is one more reason the LLM
+streams are exploratory.
 
 **Rubric clarifications added after practice, before rating [28-09-2026].**
 Three points were underspecified and are now fixed in calibration.json: (a) precedence — the 0 conditions are applied first, and "the explanation restates the prompt" overrides the naming-based 1 conditions, so a path whose content reduces to "the token appeared earlier" is a 0 however its features are labelled; (b) crossings count only feature-to-feature edges across positions, since a token embedding reaching a later position is the residual stream carrying the raw token rather than transported computation; (c) the two mechanical checks for a 2 are necessary but not sufficient — the error rule and the label rule still apply afterwards. All three were derived from practice graphs drawn from outside the rated sample, before any rated graph was seen.
