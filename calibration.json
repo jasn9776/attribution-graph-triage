@@ -1,0 +1,69 @@
+CALIBRATION = {
+    # ---- apply in this order ------------------------------------------------
+    "precedence": ("apply the 0 conditions FIRST. 'restates the prompt' is about CONTENT and "
+                   "overrides the 1 conditions, which are about naming: a path whose content "
+                   "reduces to 'the token appeared earlier' is a 0 however its features are "
+                   "labelled. Then the error rule, then the label rule, then the 2 checks."),
+
+    "0": ("no cross-position edge AND no named intermediate; OR the feature the explanation "
+          "depends on has an error node as its largest input; OR the explanation restates "
+          "the prompt (a token repeated, a space before a year, an article expected)"),
+
+    "1": ("a named feature I can read but no path to the logit; OR a complete path whose "
+          "intermediate I cannot name, including when the label is vague or implausible for "
+          "the position it sits on (record the label in the note); OR a real named "
+          "intermediate that sits only at the read-out position, with no crossing"),
+
+    "2": ("an interpretable intermediate feature built at a CONTENT position — one that says "
+          "something the prompt does not — carried by a cross-position edge into a feature at "
+          "the read-out position that feeds the logit. Both are required: a crossing without "
+          "an intermediate is routing, not computation (raw token embeddings reaching the "
+          "logit from earlier positions); an intermediate without a crossing is the final "
+          "token elaborating itself, which the prompt largely implies already"),
+
+    # ---- the rules that decide the hard cases -------------------------------
+    "check_before_2": ("NECESSARY, NOT SUFFICIENT: the trace footer reports >=1 crossing AND a "
+                       "named feature sits at a non-final position. After both pass, the error "
+                       "rule and the label rule still apply."),
+
+    "crossing_rule": ("only FEATURE-to-FEATURE edges across positions are marked * and count "
+                      "toward the check. A token embedding reaching a later position is the "
+                      "residual stream carrying the raw token, not transported computation."),
+
+    "error_rule": ("a feature is unreadable when an error node is its largest input, or when "
+                   "error nodes are most of its inputs; error elsewhere in the tree does not "
+                   "disqualify it"),
+
+    "label_rule": ("a label counts as naming only if it is specific and plausible for the "
+                   "position it sits on. A label that merely contains the predicted word is "
+                   "not an intermediate unless something upstream produced it"),
+
+    "influence_rule": ("magnitude is not part of the rating: a complete named chain is a 2 "
+                       "however small its weights. Weak chains, and chains smaller than the "
+                       "direct token-to-logit edge, are flagged in the note field and split "
+                       "out on Day 6"),
+
+    "naming_rule": "strict: a 2 requires naming the intermediate, using the Neuronpedia description",
+
+    # ---- anchors from real practice graphs ----------------------------------
+    "worked_examples": {
+        "2": ("Tokyo -> «japanese words and place names» (L14, pos9) -> «text discussing Japan» "
+              "(L20) -> crosses -> «words relating to Japanese people/places» (L23, pos12) -> "
+              "logit. Japan is not in the prompt."),
+        "1": ("a real named feature with no path to the logit, or one sitting only at the "
+              "read-out position with no crossing (e.g. 'heavy' -> «negative experiences, often "
+              "described as burden», all at the read-out position)"),
+        "0": ("p0165 induction: two crossings, but labels implausible for nonce tokens («year» "
+              "on 'yol'), and the explanation reduces to the token appearing earlier; direct "
+              "token edges 0.056/0.050 dwarf the 0.008 feature path"),
+    },
+
+    # ---- how the graphs were shown ------------------------------------------
+    "viewer": f"explain(): summary, labelled path diagram, trace. depth={DEPTH}, width={WIDTH}, "
+              f"min_w={MIN_W}, keep_min={KEEP_MIN}",
+    "labels": "Neuronpedia gemma-2-2b/{layer}-gemmascope-transcoder-16k",
+}
+
+import json
+json.dump(CALIBRATION, open(f"{OUT}/calibration.json", "w"), indent=2)
+print(json.dumps(CALIBRATION, indent=2))
