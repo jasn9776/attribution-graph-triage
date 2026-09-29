@@ -125,13 +125,32 @@ re-inserted unmarked and the 50 shuffled, so intra-rater consistency is measurab
 | **1** | at least one meaningful intermediate feature identifiable, but no complete path |
 | **0** | neither |
 
-Two mechanical checks before a 2: the trace reports at least one cross-position edge, **and** a
-named feature in the chain sits at a non-final token position. A crossing without an intermediate
-is routing rather than computation — raw token embeddings reaching the logit through the residual
-stream. An intermediate without a crossing is the read-out token elaborating itself, which the
-prompt largely implies. Full criteria, including the treatment of error-fed features and vague
-labels, are in `data/calibration.json`, written after ten practice graphs drawn from outside the
-rated sample.
+**Calibration.** The three grades don't say how to apply them to a real graph, so criteria were
+developed on practice material — constructed examples in the identical output format, plus real
+graphs sampled from the 215 corpus prompts outside the rated sample — and frozen in
+`data/calibration.json` before rating began. In application order:
+
+1. **Precedence.** Check the 0 conditions first. "The explanation restates the prompt" is about
+   *content* and overrides the 1 conditions, which are about *naming*.
+2. **The two checks for a 2 are necessary, not sufficient**: the trace reports at least one
+   cross-position edge, and a named feature sits at a non-final position. Both can pass and the
+   graph still be a 0 once the rules below apply.
+3. **Crossings count only feature-to-feature edges.** A token embedding reaching a later position
+   is the residual stream carrying the raw token, not transported computation.
+4. **Error rule.** A feature is unreadable when an error node is its *largest* input. Error
+   elsewhere in the tree does not disqualify it.
+5. **Label rule.** A label names an intermediate only if it is specific *and plausible for the
+   position it sits on*. Neuronpedia descriptions come from natural text, so on off-distribution
+   input features fire for unrelated reasons — «year» on a nonce token, «mentions of proteins» on a
+   Python parameter name. A label that merely contains the predicted word is not an intermediate
+   either.
+6. **Influence is not part of the rating**; weak chains are flagged in the written reason and split
+   out at analysis.
+
+**Disclosure.** These criteria were developed in discussion with an LLM assistant, which proposed
+reference gradings for the practice material. That creates a dependence between the human rater's
+criteria and the LLM streams, which are given the same written rubric — so agreement between them
+is not evidence of independent convergence, and is reported as such.
 
 **Presentation.** `circuit_view.explain()`: a four-line orientation summary, a labelled path diagram
 of the backward-reachable subgraph from the predicted logit, and a deduplicated text trace of the
