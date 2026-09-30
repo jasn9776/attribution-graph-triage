@@ -807,3 +807,15 @@ Three points were underspecified and are now fixed in calibration.json: (a) prec
 
 **Duplicate rating rows removed [30-09-2026].**
 The ratings file held 53 rows for 50 presentations: presentation 42 recorded twice and 48 three times, from record() being re-run. All repeats were byte-identical — same rating, same reason, same timestamp — so no re-rating occurred and deduplication discards no information. The first row by timestamp was kept in each case. The unmodified file is retained as ratings_js_RAW.jsonl.
+
+**Notes made during rating [30-09-2026]**
+Stopped at after 18 for BREAK 1.
+minus 2.5 minutes for Q27 due to interruption
+minus 1 minute for Q33 
+minus 7 mins for Q37
+Stopped after 37 for BREAK 2.
+
+Was uncertain about how error nodes should be treated, may be a confounder. If an upstream feature feeds into an error dominated feature, is the upstream feature automatically disqualified. This was not consciously consistently applied. 
+
+On prompt 48 I wrote *"to keep consistent I have decided dates is not in the prompt."* This was to keep consistent with the other ratings i had made earlier. This was not covered in the criteria.
+
