@@ -819,3 +819,11 @@ Was uncertain about how error nodes should be treated, may be a confounder. If a
 
 On prompt 48 I wrote *"to keep consistent I have decided dates is not in the prompt."* This was to keep consistent with the other ratings i had made earlier. This was not covered in the criteria.
 
+**Additional Exploratory Stream [30-09-2026]**
+As an additional exploratory analysis, in addition to those in D3.11, I will ask my collaborating LLM (The main Chat that has been guiding me) to rate the prompts, presumably blinded. 
+
+The prompt used was:
+
+I will now have you rate the 50 prompts giving reasons based on our calibration. This is to get readings from an LLM, with context that may not have been reflected in the prompt. Rate them exactly as we have agreed. Documentation for this has been added to the preregistration. I will feed the batches one at a time, just as I did for the LLMs in private mode. Do not use your context for the repeated prompts and regenerate your responses anew regardless of whether you have seen the prompt before. 
+
+I then pasted the reply_rate_1 ... reply_rate_5 files (The same prompts used for the other streams separated into batches - not withstanding the fact that It would obviously not be blinded to depulicates)
