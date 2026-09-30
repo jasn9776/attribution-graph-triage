@@ -827,3 +827,6 @@ The prompt used was:
 I will now have you rate the 50 prompts giving reasons based on our calibration. This is to get readings from an LLM, with context that may not have been reflected in the prompt. Rate them exactly as we have agreed. Documentation for this has been added to the preregistration. I will feed the batches one at a time, just as I did for the LLMs in private mode. Do not use your context for the repeated prompts and regenerate your responses anew regardless of whether you have seen the prompt before. 
 
 I then pasted the reply_rate_1 ... reply_rate_5 files (The same prompts used for the other streams separated into batches - not withstanding the fact that It would obviously not be blinded to depulicates)
+
+**Stream 4 (exploratory, maximally dependent):**
+assistant-with-context. Rated by the LLM assistant that co-developed the rating criteria and proposed reference gradings during calibration, with the full project context including the hypotheses in its window. Duplicate pairs share context, so intra-rater consistency for this stream is not comparable with the others. Reported for interest; carries no validation weight.
