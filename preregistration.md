@@ -804,3 +804,6 @@ streams are exploratory.
 
 **Rubric clarifications added after practice, before rating [28-09-2026].**
 Three points were underspecified and are now fixed in calibration.json: (a) precedence — the 0 conditions are applied first, and "the explanation restates the prompt" overrides the naming-based 1 conditions, so a path whose content reduces to "the token appeared earlier" is a 0 however its features are labelled; (b) crossings count only feature-to-feature edges across positions, since a token embedding reaching a later position is the residual stream carrying the raw token rather than transported computation; (c) the two mechanical checks for a 2 are necessary but not sufficient — the error rule and the label rule still apply afterwards. All three were derived from practice graphs drawn from outside the rated sample, before any rated graph was seen.
+
+**Duplicate rating rows removed [30-09-2026].**
+The ratings file held 53 rows for 50 presentations: presentation 42 recorded twice and 48 three times, from record() being re-run. All repeats were byte-identical — same rating, same reason, same timestamp — so no re-rating occurred and deduplication discards no information. The first row by timestamp was kept in each case. The unmodified file is retained as ratings_js_RAW.jsonl.
