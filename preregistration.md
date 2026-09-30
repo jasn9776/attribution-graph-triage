@@ -830,3 +830,6 @@ I then pasted the reply_rate_1 ... reply_rate_5 files (The same prompts used for
 
 **Stream 4 (exploratory, maximally dependent):**
 assistant-with-context. Rated by the LLM assistant that co-developed the rating criteria and proposed reference gradings during calibration, with the full project context including the hypotheses in its window. Duplicate pairs share context, so intra-rater consistency for this stream is not comparable with the others. Reported for interest; carries no validation weight.
+
+**D3.1 — outcome [30-09-2026].**
+compute_graph_scores took 0.16 s on the reference graph and 3.72 s on the longest corpus prompt (recorded in day3_config.json, 22-09-2026). Both are under the 5 s threshold set in D3.1, so the pre-registered branch was "the library metric remains primary." The choice became moot in any case once D3.2 showed the ~0.008 gap was an error in my implementation rather than a methodological difference: after correction the two agree to 1.1×10⁻⁶ on the same graph. The library's definition is primary, computed via the fast path; compute_graph_scores was additionally run on the 32-graph subsample (D3.5), where the maximum difference was 3.4×10⁻⁴ including re-attribution noise.
