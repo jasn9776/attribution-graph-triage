@@ -861,3 +861,6 @@ So overall, I think I was relatively generous, possibly too generous in my ratin
 
 **Systematic rubric ambiguity on arithmetic prompts. [01-10-2026 1:21PM]** The two LLM streams (a private Opus Chat vs my AI assistant with full context) diverge consistently on arithmetic graphs where generic numeric features sit at the read-out position with no crossing: one reads them as "a real named intermediate at the read-out position" (grade 1), the other as "the explanation restates the prompt — a digit is expected after '='" (grade 0). Both follow from the criteria as written. The ambiguity is in whether a generic category label on the read-out token counts as naming an intermediate. Recorded before the human ratings were compared, and reported as a limitation of the rubric rather than resolved after the fact.
 
+**Expectations Before Running Results Notebook [01-10-2026 2:08PM]**
+I believe that P2 will hold, i.e. replacement score will not discriminate categories, with the possible exception of obfuscated text. 
+Due to my reflections made on the rating process and the uncertainty of my rating accuracy, I expect the rho to be even weaker than my preregistration predicted with a rho < 0.3 ,most likely 0.2 or less. 
