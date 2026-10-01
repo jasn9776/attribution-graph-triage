@@ -12,8 +12,8 @@
 
 Circuit tracing via attribution graphs is currently the leading method for working out how a
 language model produced a particular output. Anthropic's
-[*Circuit Tracing*](https://transformer-circuits.pub/2025/attribution-graphs/methods.html) and
-[*On the Biology of a Large Language Model*](https://transformer-circuits.pub/2025/attribution-graphs/biology.html)
+[*Circuit Tracing*](https://transformer-circuits.pub/2025/attribution-graphs/methods.html), '*the methods paper*' and
+[*On the Biology of a Large Language Model*](https://transformer-circuits.pub/2025/attribution-graphs/biology.html), which applies the method to Claude 3.5 Haiku,
 introduced it in March 2025, and
 [`circuit-tracer`](https://github.com/safety-research/circuit-tracer) made it available for
 Gemma-2-2B and Llama-3.2-1B.
