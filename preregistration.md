@@ -864,3 +864,6 @@ So overall, I think I was relatively generous, possibly too generous in my ratin
 **Expectations Before Running Results Notebook [01-10-2026 2:08PM]**
 I believe that P2 will hold, i.e. replacement score will not discriminate categories, with the possible exception of obfuscated text. 
 Due to my reflections made on the rating process and the uncertainty of my rating accuracy, I expect the rho to be even weaker than my preregistration predicted with a rho < 0.3 ,most likely 0.2 or less. 
+
+**Reliability [01-10-2026 5:39PM].** 
+Intra-rater quadratic weighted kappa on 10 unmarked duplicates: human 0.889 (9/10 exact, the single disagreement adjacent), LLM 0.762, assistant 1.000 (not comparable — its duplicate pairs shared a context window). The human figure exceeds the 0.6 threshold in section 5, so P5 is reported as interpretable.
