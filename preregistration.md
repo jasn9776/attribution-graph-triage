@@ -859,3 +859,5 @@ There were obvious 0's such as error filled text summaries or those that obvious
 
 So overall, I think I was relatively generous, possibly too generous in my ratings and a 2 doesn't necessarily mean someone reading the graph would be confident they learnt a mechanism from the graph. 
 
+**Systematic rubric ambiguity on arithmetic prompts. [01-10-2026 1:21PM]** The two LLM streams (a private Opus Chat vs my AI assistant with full context) diverge consistently on arithmetic graphs where generic numeric features sit at the read-out position with no crossing: one reads them as "a real named intermediate at the read-out position" (grade 1), the other as "the explanation restates the prompt — a digit is expected after '='" (grade 0). Both follow from the criteria as written. The ambiguity is in whether a generic category label on the read-out token counts as naming an intermediate. Recorded before the human ratings were compared, and reported as a limitation of the rubric rather than resolved after the fact.
+
