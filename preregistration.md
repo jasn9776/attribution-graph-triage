@@ -867,3 +867,5 @@ Due to my reflections made on the rating process and the uncertainty of my ratin
 
 **Reliability [01-10-2026 5:39PM].** 
 Intra-rater quadratic weighted kappa on 10 unmarked duplicates: human 0.889 (9/10 exact, the single disagreement adjacent), LLM 0.762, assistant 1.000 (not comparable — its duplicate pairs shared a context window). The human figure exceeds the 0.6 threshold in section 5, so P5 is reported as interpretable.
+
+**Presentation 1: recorded rating does not match the stated reason.** The written reason concludes "FINAL answer: 0" while the recorded rating is 1 — a transcription error at the first presentation. The rating was not revised, since revising after the analysis would be worse than the error. The effect is bounded: recomputing P5 with presentation 1 as 0 gives Spearman +0.217 (p = 0.180) against the recorded +0.243 (p = 0.132). The prediction |rho| < 0.4 holds under both.
