@@ -833,3 +833,29 @@ assistant-with-context. Rated by the LLM assistant that co-developed the rating 
 
 **D3.1 — outcome [30-09-2026].**
 compute_graph_scores took 0.16 s on the reference graph and 3.72 s on the longest corpus prompt (recorded in day3_config.json, 22-09-2026). Both are under the 5 s threshold set in D3.1, so the pre-registered branch was "the library metric remains primary." The choice became moot in any case once D3.2 showed the ~0.008 gap was an error in my implementation rather than a methodological difference: after correction the two agree to 1.1×10⁻⁶ on the same graph. The library's definition is primary, computed via the fast path; compute_graph_scores was additionally run on the 32-graph subsample (D3.5), where the maximum difference was 3.4×10⁻⁴ including re-attribution noise.
+
+**Human (JS) Reflection about rating process [01-10-2026 12:20PM].**
+Written without AI assistance:
+During the rating process, I tried to follow the criteria. I will write a reflection to try to capture naunces not reflected in the criteria. Some prompts I spent more time on than planned. I noticed I went over the 5min limit on many prompts (possibly >50%). 
+Essentially from memory my process was as follows:
+Look at the task and try to understand what the answer should be and ask whether the model did the task expected. If it was not true, it could still be given a 1 or 2, if it gave enough insight into the model's behaviour. Next I quickly scanned the token influences and tried to determine if roughly the content positions e.g. "Cuba", "Capital", "Geography" had more influence than the filler words "it" "and" "The", etc. 
+I then looked at the error by position to scan if any tokens absorbed most of the error, excluding the final/read-out position which normally accumulates the most error. To my memory, no prompts really stood out. 
+I then looked at the (mid/early) ratio, with the rough rule that 0.25 represented evidence of real intermediate processing, although I tried not to let it influence my decision too much.
+These checks could have potentially coloured my ratings of the graphs. 
+
+I scanned the visual graph but I mainly relied on the text summary of the attribute graph (since the graph was quite messy and hard to read). As per the criteria, I didn't really pay attention to the relative weights/influence of the features, except for if it was error dominated. I would scan through the feature names given by neuropedia, and then check the number of cross-position edges (printed at the bottom on the output). Then i looked for plausible features (to be honest the process was a bit haphazard), essentially for a 2, I would score it if it had a cross position edge somewhere and that path produced a reasonable intermediate that I judged as plausible. I was possibly influenced by the AI conversation (although I did not consciously try to implement it differently) telling me that the Gemma2-2B neuropedia annotations were not as good as the Claude Haiku Ones (per-layer transcoder) vs (CLT). So perhaps I was more lenient than I should have been. Anything that seemed to produce something relevant to the prompt that was not in the prompt itself, was taken as a "real intermediate". 1 was given roughly, when there were no cross-position edges (so there was mostly local processing at the read-out position). 1 was also given if there was no real plausible intermediate but a cross-position edge (a complete path but no real named intermediate). I admit my understanding of when to apply the error rule was a bit haphazard, due to not deciding in advance whether if error dominated (i.e. was the top 'feature') affected a downstream (closer to output logit) feature, would it discount an upstream feature. So essentially, it was based on a sort of vibe I got as to what grade to award on borderline cases. (If i remember I did decide that if the downstream feature was error dominated it wouldn't count, but not sure if i applied the rule consistently. 
+
+I think there were also ambiguities in the criteria that I found confusing:
+1. in the criteria we use p0165 induction as an example for a graph that should be rated zero, "two crossings, but labels implausible for nonce tokens («year» on
+'yol'), and the explanation reduces to the token appearing earlier; direct token edges 0.056 and 0.050 dwarf the 0.008 feature path. "
+This may have contracted the stated criteria in rating a 1:
+1:
+"a complete path whose intermediate I cannot name, including when the label is vague or
+implausible for the position it sits on (record the label in the note);"
+
+So essentailly, it came down to whether I believed the prompt restated the prompt, and I beleive I was quite generous at this, awarding a 1 even in borderline cases where I was not sure whether the named vague feature really added something new the prompt didn't, essentially giving the benefit of the doubt. 
+
+There were obvious 0's such as error filled text summaries or those that obviously restated the prompt but I believe I gave comparatively fewer zeros than what my AI assistant would have done. (note this statement was made AFTER i had asked my AI assistant (with full context and has been guiding me through this project) to rate the prompts.) 
+
+So overall, I think I was relatively generous, possibly too generous in my ratings and a 2 doesn't necessarily mean someone reading the graph would be confident they learnt a mechanism from the graph. 
+
