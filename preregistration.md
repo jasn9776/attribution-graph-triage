@@ -565,6 +565,7 @@ Rubric, fixed before any graph is viewed:
 Sampling. 40 graphs: replacement scores of all successful graphs are divided into 8 quantile bins, and 5 graphs drawn per bin with random_state = 0. 10 of the 40 are then re-inserted as unmarked duplicates, giving 50 presentations in randomised order.
 
 Presentation. Pruned at node threshold 0.8, viewed in the circuit-tracer graph viewer with all metric values hidden. 5-minute cap per graph.
+Note: see **Presentation, corrected from D3.8.** for updated protocol
 
 Reliability. Intra-rater agreement on the 10 duplicates is reported as weighted kappa. If below 0.6, P5 is reported as uninterpretable (Section 5).
 
