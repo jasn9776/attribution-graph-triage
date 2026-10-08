@@ -1,353 +1,287 @@
 # attribution-graph-triage
 
-**Can cheap properties of a prompt predict whether its attribution graph is worth reading?**
+**When should you not trust an attribution graph?**
 
-> **Status: day 3 complete, 255 graphs collected. Blind human rating in progress.** The rating
-> notebook, the sample manifest and the rating criteria were all committed before any graph was
-> rated. Outcome distributions are not reported here until the rating is finished.
+Pre-registered. 255 attribution graphs on Gemma-2-2B, free-tier compute.
+Five predictions registered before any data was collected; **three failed.**
+
+**The result: no usable pre-flight check for attribution-graph quality exists on this model.** The
+search was pre-registered and the negative result is the headline.
 
 ---
 
 ## The problem
 
-Circuit tracing via attribution graphs is currently the leading method for working out how a
-language model produced a particular output. Anthropic's
-[*Circuit Tracing*](https://transformer-circuits.pub/2025/attribution-graphs/methods.html), '*the methods paper*' and
-[*On the Biology of a Large Language Model*](https://transformer-circuits.pub/2025/attribution-graphs/biology.html), which applies the method to Claude 3.5 Haiku,
-introduced it in March 2025, and
-[`circuit-tracer`](https://github.com/safety-research/circuit-tracer) made it available for
-Gemma-2-2B and Llama-3.2-1B.
+Attribution graphs are the leading method for working out how a language model produced a particular
+output ([*Circuit Tracing*](https://transformer-circuits.pub/2025/attribution-graphs/methods.html),
+[*On the Biology of a Large Language Model*](https://transformer-circuits.pub/2025/attribution-graphs/biology.html),
+[`circuit-tracer`](https://github.com/safety-research/circuit-tracer)). They produce genuinely new
+findings — and their authors report that they gave satisfying insight on roughly **a quarter** of the
+prompts tried, at **a few hours of human effort per graph**. High failure rate, expensive attempts,
+no way to tell in advance which bucket you are in.
 
-Two things are true of the method at once:
+The tooling already computes replacement score and completeness, and the methods paper notes these
+are useful *"to flag prompts our method performs poorly on"* — then never develops that use. They are
+reported as dataset-wide averages for comparing dictionaries, never as a per-prompt instrument, and
+nobody had tested whether they predict a human's success at reading a particular graph.
 
-1. It produces genuinely new mechanistic findings — multi-step reasoning, forward planning in
-   poetry, a model with a hidden goal.
-2. The authors report that it gave satisfying insight on **roughly a quarter** of the prompts they
-   tried, note that this is difficult to quantify precisely, and describe a cost of **a few hours
-   of human effort per graph**.
+**Why the metric behaves as it does:** influence is pushed backwards from the logits and can only
+terminate at a node with no inputs — a token embedding or an error node. So **replacement score is
+the embedding share**. But a token's embedding enters the residual stream at layer 0 and is never
+removed, so the unembedding can read it at layer 25 with no feature in between. That mass counts
+toward replacement while explaining nothing. The metric measures **coverage**, and coverage is
+easiest when there is little computation to cover.
 
-So: a ~75% failure rate, expensive attempts, and no way to tell in advance which bucket you are in.
-
-The library already computes replacement score and completeness, and the methods paper notes these
-are useful *"to flag prompts our method performs poorly on"* — then never develops that use. The
-metrics are only ever reported as dataset-wide averages for comparing dictionary-learning setups.
-Nobody has tested whether they predict a human's success at reading a particular graph.
-
-**That gap is what this project addresses.**
-
-## The question
-
-Across a stratified corpus of 255 prompts on Gemma-2-2B:
-
-- Do cheap prompt-side properties — token count, next-token entropy, top-1 probability,
-  token-frequency proxy, prompt category — predict attribution-graph quality?
-- Does replacement score track whether a human can actually extract a mechanism from the graph?
-
-Both answers are useful. A working predictor gives practitioners a pre-flight check that costs
-milliseconds instead of hours. A null result documents that the field's headline quality metric
-does not support the use its own authors suggested for it.
-
-## Design
-
-Eight prompt categories, 255 prompts, each grounded in a limitation the methods paper documents
-qualitatively but never quantifies:
-
-| Category | n | Grounded in |
-|---|---|---|
-| Obfuscated text (4 corruption rungs) | 44 | reconstruction-error blind spot |
-| Factual recall | 40 | published success case |
-| Known vs unknown entity | 32 | inactive-feature / suppression blind spot |
-| Multi-hop | 32 | longer causal chains, error accumulation |
-| Code completion | 29 | untested territory |
-| Two-digit arithmetic | 28 | published success case |
-| Syntactic agreement | 26 | short mechanical control |
-| Induction / copying | 24 | attention blind spot (QK circuits are frozen) |
-
-A ninth category, multiple choice, was **dropped after two designs failed their manipulation
-checks** — see below.
-
-**Outcomes:** replacement score (primary), completeness, total error mass, per-layer and
-per-position error distributions and their summaries, mean path length, node-influence curve, graph
-size.
-
-**Controls:** length varied deliberately *within* category, so it is not confounded *between*
-categories (eta² = 0.131); matched pairs for the known/unknown category, matched on first name and
-on token count within the frame; a dose-response ladder rather than a switch for obfuscation, with
-only complete four-rung ladders retained. No confidence filter: no entropy band retained every
-category above n = 20, so entropy and top-1 probability are carried as covariates instead, which
-avoids imposing uneven selection pressure across categories.
-
-**Validation:** 40 graphs hand-rated blind on a 3-point "did I learn a mechanism" scale, with 10
-unmarked duplicates for intra-rater consistency, correlated against the automated metrics. Protocol
-below.
-
-## Category validation
-
-Every category asserts that a prompt type engages a particular mechanism. Each claim was checked
-independently of the attribution outcomes, and two categories were rebuilt when the check failed.
-
-| Category | Check | Result |
-|---|---|---|
-| Induction | Model must copy the next nonce word, not complete a frame | 24/24, strict 3-character test |
-| Known vs unknown entity | Generated birth year: specific vs round | 5/16 vs 16/16 round, Fisher p = 6.8e-05 |
-| Syntactic agreement | Verb agrees with the true head, not the nearest noun | 18/18; margins +12.2 (plural) / −7.5 (singular) |
-| Factual recall, multi-hop | Model must produce the answer, not a function word | 89% with a `Fact:` prefix on short frames |
-| Obfuscated | Corruption graded, ladders complete | 11 complete ladders; entropy not monotonic (reported) |
-
-**Two categories were rebuilt.** Sentence-frame induction prompts (`"The blorp ran fast. The
-blorp"`) were solved by frame completion — the model predicted `ran` or `was` in 20/20 cases — so
-the category was rebuilt on bigram repetition. Multi-hop originally included five cities that are
-their own state capital, making the answer copyable without a second hop.
-
-**Multiple choice was dropped.** Gemma-2-2B (base) does not bind answers to option letters: the
-arrow format continued the option list (12/12 predicted `c`, a non-existent option) and the answer
-format defaulted to `a` (chosen 75% of the time; 58% accuracy against a 42% always-`a` baseline).
-A redesign as forced choice between two in-context option words also failed — 79% of choices went
-to the first-listed option, because repeating the stem created an induction pattern and in-context
-copying overrode factual knowledge. Per a rule fixed before the check was run, the category was
-dropped rather than redesigned a third time.
-
-## Human rating protocol
-
-The project's secondary question — does replacement score track whether a *person* can extract a
-mechanism — needs a human judgement, so how the graph is displayed is part of the method rather
-than a convenience.
-
-**Sampling.** Replacement scores of all 255 graphs are split into 8 quantile bins and 5 graphs drawn
-from each, giving 40 that span the range rather than clustering in the middle. 10 of the 40 are
-re-inserted unmarked and the 50 shuffled, so intra-rater consistency is measurable.
-
-**Rubric**, fixed before any graph was viewed:
+## Findings
 
 | | |
 |---|---|
-| **2** | a causal path from input to output, stated in one sentence, naming the intermediate features |
-| **1** | at least one meaningful intermediate feature identifiable, but no complete path |
-| **0** | neither |
+| **Replacement barely moves across prompt types** | 8 categories span **0.036** (0.709 arithmetic → 0.746 induction). Completeness spans 0.008 — a constant. |
+| **It moves more when you pad the prompt than when you change the task** | Same fact in a short vs long frame: replacement rose in **27 of 27** pairs, mean **+0.032** (Wilcoxon p = 1.5×10⁻⁸) — the size of the whole between-category range. |
+| **Its ranking inverts on one category** | Induction scores **highest** (0.7455); **all 5 rated induction graphs scored 0.** |
+| **It does not track human readability** | Spearman **+0.243** (p = 0.13, n = 40), non-monotonic: 0.731 / 0.729 / 0.755 for grades 0 / 1 / 2. |
+| **Stripping the uninterpretable tenth works better** | Dropping direct token→logit paths (9.5% of the score) lifts the correlation to **+0.297** and makes it monotonic. |
+| **What structure exists does not transfer** | Category explains 21–47% of variance, but leave-one-category-out R² is positive for exactly one outcome — and that one correlates **−0.69** with token count. |
 
-**Calibration.** The three grades don't say how to apply them to a real graph, so criteria were
-developed on practice material — constructed examples in the identical output format, plus real
-graphs sampled from the 215 corpus prompts outside the rated sample — and frozen in
-`data/calibration.json` before rating began. In application order:
+## The five pre-registered results
 
-1. **Precedence.** Check the 0 conditions first. "The explanation restates the prompt" is about
-   *content* and overrides the 1 conditions, which are about *naming*.
-2. **The two checks for a 2 are necessary, not sufficient**: the trace reports at least one
-   cross-position edge, and a named feature sits at a non-final position. Both can pass and the
-   graph still be a 0 once the rules below apply.
-3. **Crossings count only feature-to-feature edges.** A token embedding reaching a later position
-   is the residual stream carrying the raw token, not transported computation.
-4. **Error rule.** A feature is unreadable when an error node is its *largest* input. Error
-   elsewhere in the tree does not disqualify it.
-5. **Label rule.** A label names an intermediate only if it is specific *and plausible for the
-   position it sits on*. Neuronpedia descriptions come from natural text, so on off-distribution
-   input features fire for unrelated reasons — «year» on a nonce token, «mentions of proteins» on a
-   Python parameter name. A label that merely contains the predicted word is not an intermediate
-   either.
-6. **Influence is not part of the rating**; weak chains are flagged in the written reason and split
-   out at analysis.
+| | Prediction | Threshold | Observed | |
+|---|---|---|---|---|
+| **P1** | category ranking predictable from documented failure modes | Spearman, 8 categories | **+0.071** (p = 0.87) | **FAILS** |
+| **P2** | replacement does *not* discriminate between categories | range < 0.15 **and** eta² < 0.20 | range 0.036 ✓, eta² **0.238** ✗ | **FAILS** |
+| **P3** | error *location* discriminates where error *quantity* does not | ≥ 2× | **1.86×** | **FAILS** |
+| **P4** | completeness even less discriminative than replacement | smaller range | 0.008 vs 0.036 | **HOLDS** |
+| **P5** | replacement vs human rating weakly positive | \|rho\| < 0.4 | **+0.243** (p = 0.13) | **HOLDS** |
 
-**Disclosure.** These criteria were developed in discussion with an LLM assistant, which proposed
-reference gradings for the practice material. That creates a dependence between the human rater's
-criteria and the LLM streams, which are given the same written rubric — so agreement between them
-is not evidence of independent convergence, and is reported as such.
+**P2 split.** The range is four times better than it needed to be — replacement discriminates even
+less than predicted, the direction the prediction wanted — but eta² exceeded its 0.20 ceiling,
+because within-category spread is smaller still (SDs 0.008–0.026). Category explains a quarter of
+the variance in a quantity that barely varies at all. The substantive prediction is supported; the
+variance-ratio form of the test is not. For scale, Anthropic's published per-layer vs cross-layer gap
+is 0.37 vs 0.61 — about seven times the entire between-category spread here. **The metric
+distinguishes methods, not prompts.**
 
-**Presentation.** `circuit_view.explain()`: a four-line orientation summary, a labelled path diagram
-of the backward-reachable subgraph from the predicted logit, and a deduplicated text trace of the
-same subgraph. Settings `depth=4, width=4, min_w=0.01, keep_min=3`, identical for all 50. Feature
-descriptions come from Neuronpedia's published explanations for the GemmaScope transcoders. No
-metric is shown until every rating is recorded, and every rating requires a written reason.
+**P1 failed informatively.** The predicted ordering was derived from the failure modes the methods
+paper documents (frozen QK, reconstruction error, suppression). Those limitations predict the
+metric's own ordering at rho = 0.07: induction was predicted 7th of 8 and ranks 1st; arithmetic was
+predicted 3rd and ranks last.
 
-**Three streams**, pre-registered before any rating:
+**P3 was the narrowest miss** — 44.4% vs 23.8%, a ratio of 1.86 against a threshold of 2.0 — and the
+*mechanism* proposed for it was wrong in two of three cases. The most concentrated categories are
+entity and multi-hop, both dominated by error at the read-out position.
 
-| # | Stream | Status | Sees |
+## The length effect
+
+Not predicted, and the strongest single result. Twelve capital-city and ten state-capital facts were
+each posed in short, medium and long frames — same fact, same answer, same model, only the wording
+around it changing. Across **27 matched short/long pairs, replacement rose in 27 of 27**: mean
++0.032, median +0.020, Wilcoxon statistic 0, p = 1.5×10⁻⁸. On the 12 items in all three frames the
+trend is monotonic (0.7147 → 0.7378 → 0.7703, Friedman p = 6.1×10⁻⁶).
+
+This is a controlled manipulation, not a correlation across different prompts — which the regression
+coefficient on token count (+0.018/token, p < 10⁻⁴) could not have established on its own.
+
+**The obvious mechanism is not the right one.** Extra tokens add embedding terminals, so the score
+"should" inflate structurally. Splitting by path length says otherwise: the **direct** share *falls*
+with length (−0.009, positive in 11 of 27) while **mediated** replacement rises in **26 of 27**
+(+0.035, p = 3.0×10⁻⁸). Longer prompts genuinely route more of the prediction through features. Why
+is open, and it's the result I'd most like explained. *Confound: short frames carry the `Fact:`
+prefix and long ones do not; the medium frames' monotonic trend makes length the more parsimonious
+reading, but it is real.*
+
+## The inversion
+
+An induction prompt is `snerrik yolvantz snerrik yolvantz snerrik`. The model predicts `yol` at
+p = 0.95, and the graph traces it cleanly to two raw embeddings at the earlier occurrences — almost
+nothing lost to error. **Coverage is excellent, and the explanation is "`yol` appeared earlier",
+which you knew from reading the prompt.**
+
+The mechanism you want — how the model knew to look at *that* token — is the induction head's
+query-key computation, frozen into a constant before attribution began. It is not in the graph and
+no amount of looking will find it. So the metric's best-scoring category is the one where a human
+learns least. Arithmetic is the mirror image: lowest replacement, and the graphs explain the model
+predicting a line break rather than a sum, because it does not do the arithmetic.
+
+Ratings across the 40 graphs (0 / 1 / 2): factual recall 0/1/4 · multi-hop 1/2/2 · code completion
+0/3/0 · syntactic agreement 1/3/0 · obfuscated 2/3/0 · entity 4/2/0 · arithmetic 4/3/0 · induction
+5/0/0. **All six 2s are geographic factual recall or multi-hop** — the shape of the published
+Dallas→Austin circuit. Known and unknown entities are indistinguishable (0.742 vs 0.745) and both
+mostly rate 0: the graph shows the model *formatting* an answer without showing it *retrieving* one.
+
+## Why no triage rule
+
+**Not for the reason pre-registered as the null.** That rule said: no rule exists if category
+explains under 10% of variance everywhere and nothing survives correction. Category explains 21–47%,
+and 47 of 66 contrasts survive Benjamini–Hochberg. There is structure — it just doesn't transfer.
+
+| Outcome | Category eta² | Leave-one-category-out R² |
+|---|---|---|
+| final-position error share | 0.431 | **+0.275** |
+| replacement score (logit) | 0.238 | +0.067 |
+| total error mass | 0.242 | +0.053 |
+| completeness (logit) | 0.210 | −0.143 |
+| error concentration (Gini) | 0.444 | −0.186 |
+| mean path length | 0.470 | −0.535 |
+
+**The ordering inverts:** the outcomes with the most in-sample structure generalise worst. The one
+outcome that transfers correlates **−0.691 with token count** — length alone accounts for 47.7% of
+its variance, more than the fitted model recovers out of category. **The only rule that generalises
+is prompt length in disguise.**
+
+Cheap continuous predictors beat the category label in-sample (R² 0.299 vs 0.238, driven by token
+count and token frequency at p < 10⁻⁴) — the practically relevant model, since a practitioner has a
+prompt and not a category. Out of category it drops fourfold to 0.067. Maximum VIF 23.1 against a
+pre-set threshold of 5 (entropy and top-1 are collinear at r = −0.958), so the combined model is not
+usable for inference.
+
+## In practice
+
+- **Don't use replacement score to choose which prompts to trace.** It was built to compare
+  dictionaries and does that well; it was never developed as a per-prompt instrument.
+- **If you report it per-prompt, report token count beside it.** On this evidence they are not
+  separable.
+- **Error location is ~2× more discriminative** but doesn't transfer, so it's a better descriptive
+  variable, not a better triage signal.
+- **A graph can be well-covered and empty.** Coverage and insight come apart systematically, not at
+  random.
+- **If you are building a rating protocol:** the boundary that broke this one is a legible but
+  generic feature at the read-out position with no cross-position edge. Three independent
+  measurements found the same ambiguity. Specify that case first.
+
+## The corpus
+
+255 prompts, 8 categories, each grounded in a limitation the methods paper documents qualitatively
+but never quantifies. Every category claim was validated **before any graph was attributed**, and two
+were rebuilt when the check failed.
+
+| Category | n | Grounded in | Validated by |
 |---|---|---|---|
-| 1 | Human rater | confirmatory — this is the reported result | diagram + text |
-| 2 | LLM rater, independent | exploratory | text only |
-| 3 | LLM audit of stream 1's stated reasoning | exploratory | text + stream 1's rating and reason |
+| Obfuscated text (4 corruption rungs) | 44 | reconstruction-error blind spot | 11 complete ladders; entropy non-monotonic, reported |
+| Factual recall | 40 | published success case | answers 89% with `Fact:` prefix on short frames |
+| Known vs unknown entity | 32 | inactive-feature / suppression | round birth years 5/16 vs 16/16, Fisher p = 6.8×10⁻⁵ |
+| Multi-hop | 32 | longer chains, error accumulation | answers 94%; own-state-capital cities removed |
+| Code completion | 29 | untested territory | — |
+| Two-digit arithmetic | 28 | published success case | correct 96% |
+| Syntactic agreement | 26 | short mechanical control | 18/18 by verb-logit margin, no attraction errors |
+| Induction / copying | 24 | attention blind spot (QK frozen) | 24/24 strict three-character copying |
 
-Streams 2 and 3 run only after all 50 human ratings are recorded, and give no feedback during
-rating: a mid-run correction would mean the 50 were rated under two standards, and the
-duplicate-based consistency estimate would measure training rather than stability. Both are
-delivered as batches of ten pasted into fresh chats; **no duplicate pair shares a batch**, since a
-duplicate in the same context as its twin could be recognised as a repeat, which the human rater
-cannot do.
+Sentence-frame induction was solved by frame completion (`ran`/`was` in 20 of 20), so the category was
+rebuilt on bigram repetition. A ninth category, **multiple choice, was dropped after two designs
+failed**: Gemma-2-2B does not bind answers to option letters, and a forced-choice redesign sent 79%
+of choices to the first-listed option because repeating the stem created an induction pattern. Per a
+rule fixed before the check, it was dropped rather than redesigned a third time.
 
-Stream 3 reports two rates separately: outright rating disagreement, and **defensible rating with
-an unsupported stated reason** — the second is rarely measured in rating studies and is possible
-here only because the reasoning is recorded alongside the exact text shown.
+Length was varied **within** category so it is not confounded **between** them (eta² = 0.131). That
+decision mattered more than expected.
 
+## The human rating
 
-## Reproducing this
+40 graphs from 8 quantile bins of replacement score, 10 re-inserted as unmarked duplicates, 50
+presentations in randomised order, **blind to every metric**, each requiring a written reason. Scale:
+**2** = a causal path statable in one sentence naming the intermediates, **1** = a meaningful feature
+but no path, **0** = neither.
 
-Everything runs on a **free Kaggle notebook**. That is deliberate — the point is a check anyone can
-apply, not one that needs a cluster.
+Criteria were developed on practice graphs from outside the rated sample and frozen in
+`data/calibration.json` before rating began — precedence (the 0 conditions first; "restates the
+prompt" overrides the naming conditions), crossings count feature-to-feature edges only, a feature is
+unreadable when an error node is its largest input, a label names an intermediate only if it is
+specific *and plausible for the position it sits on*, and magnitude is not part of the rating.
+Presentation was `circuit_view.explain()` at `depth=4, width=4, min_w=0.01, keep_min=3`, identical for
+all 50, with Neuronpedia labels for the GemmaScope transcoders.
+
+**Intra-rater quadratic weighted kappa: 0.889**, 9 of 10 duplicate pairs identical.
+
+Two exploratory LLM streams (pre-registered as D3.11, run only after all 50 human ratings existed):
+an independent rater from the stored text with the same rubric (kappa 0.68), and an audit of the
+human's stated reasoning. **Neither is independent evidence** — both were given criteria the human
+rater wrote, and one helped write them. The audit produced a number rating studies rarely report:
+**12% of ratings were defensible but rested on an unsupported reason**, with outright disagreement on
+30%. Five of eight flagged cases are the same under-specified rule. No rating was revised.
+
+## Limitations, worst first
+
+- **The rating budget is a tenth of what the original work describes** — median 262 s per graph
+  against a few hours, with the 5-minute cap exceeded on 18 of 50. So the ratings measure whether a
+  mechanism is *apparent within a bounded budget*, not whether one *exists*. Bias runs toward lower
+  ratings, so +0.243 is plausibly a lower bound. The length effect uses no ratings, and the induction
+  inversion doesn't depend on effort.
+- **Per-layer transcoders only.** Cross-layer transcoders score higher (0.61 vs 0.37) with shorter
+  paths (2.3 vs 3.7 hops) by collapsing near-duplicate feature chains — several graphs rated 1 showed
+  a legible feature inside exactly such a chain. **Whether these results survive the better dictionary
+  family is the most important open question here.** The length effect follows from the residual
+  stream and should be dictionary-independent.
+- **One rater, not blind to the hypotheses.** Inter-rater reliability is not measured.
+- **Coverage is not correctness.** These metrics measure whether a graph covers the computation, not
+  whether it covers it correctly; that needs per-graph interventions, scoped out in advance. A graph
+  can be well-covered, readable, and wrong.
+- **One model, one size, bf16, free-tier hardware.** Categories are hand-defined and not exhaustive.
+- Smaller things are recorded rather than smoothed: a transcription error on the first rating (P5
+  becomes +0.217, p = 0.18 — holds either way), three ratings with interrupted time, and an
+  entity-category criterion articulated at presentation 48.
+
+## Reproducing
+
+Everything runs on a **free Kaggle notebook** — the point is a check anyone can apply.
 
 ```
-Accelerator:  GPU T4 x2
-Model:        google/gemma-2-2b, bfloat16
-Transcoders:  GemmaScope per-layer (mwhanna/gemma-scope-transcoders)
-Backend:      nnsight
-Settings:     max_feature_nodes=32768, batch_size=32, lazy_encoder=True
-Corpus run:   255 graphs, 72 minutes, mean 18.1 s per graph, peak 12.5 GB GPU
+Accelerator:  GPU T4 x2            Settings:  max_feature_nodes=32768, batch_size=32
+Model:        google/gemma-2-2b, bf16         lazy_encoder=True
+Transcoders:  GemmaScope per-layer  Run:      255 graphs, 72 min, 18.1 s/graph, 12.5 GB peak
+Backend:      nnsight               Noise:    ~5e-05 on replacement (bf16 re-attribution)
 ```
 
-### Environment findings
+Metrics reproduce the library's `compute_graph_scores` to **1.1×10⁻⁶** while also recording the
+per-(layer, position) error decomposition, which the library's scalar metrics do not expose — that
+decomposition is this project's distinctive measurement. Influence comes from iterating the Neumann
+series rather than inverting `(I − A)`: the graph is a DAG, so the series terminates exactly. The
+direct/mediated split records each step's contribution separately and was verified against a
+hand-computed synthetic DAG.
 
-These cost most of a day to discover and are not documented anywhere I could find. Recorded in case
-they save someone else the time.
+**`circuit_view.py` is part of the method, not a convenience** — the rating asks whether a person can
+read a graph, so what they were shown matters. Edge selection is top-k first and threshold second:
+weights are row-normalised, so a high fan-in node (the logit has thousands of inputs) has tiny weights
+throughout and a fixed threshold empties the graph.
 
-**The P100 is unusable.** Kaggle's other accelerator is compute capability sm_60, and the installed
-PyTorch ships kernels for sm_70 and above only. It fails with `no kernel image is available for
-execution on the device`. Not fixable by tuning — use the T4 x2.
+Environment findings that cost most of a day each — the node layout that silently mis-orders logit
+probabilities, the structural-zero indexing check, why the P100 is unusable, why fp32 doesn't fit,
+and why measuring edge sums on the *displayed* graph inflated one estimate fourfold — are in
+[`NOTES.md`](NOTES.md).
 
-**fp32 does not fit.** `ReplacementModel.from_pretrained` defaults to `torch.float32`. Gemma-2-2B
-is ~10.4 GB at that precision and the transcoder encoders add ~3.9 GB, against 14.56 GB of VRAM.
-Use `dtype=torch.bfloat16` — and bf16 rather than fp16, because Gemma-2's logit soft-capping and
-large activations make fp16 overflow a real risk.
-
-**System RAM is the binding constraint during load, not VRAM.** The TransformerLens backend
-instantiates the HuggingFace model and then converts its state dict, holding both at once, which
-exceeds the ~13 GB the T4 x2 instance provides. Either use `backend="nnsight"`, which skips that
-conversion, or pre-load the HF model yourself with `low_cpu_mem_usage=True` and pass it as
-`hf_model=`.
-
-**Node layout.** Nodes are laid out `[features | errors | tokens | logits]`, with errors stored
-**layer-major** — one per (layer, token position) — and logits as the last `n_logits` nodes, in the
-order of `logit_probabilities`. Locating logits structurally instead (as nodes with no outgoing
-edges) also catches dead features and silently mis-orders the probabilities; that cost this project
-a day and one wrong finding. Take the layout from the graph.
-
-**Structural zeros.** Exactly two kinds of error node carry zero influence: BOS at every layer, and
-the **last** layer at every non-final position — an error injected after the final attention layer
-has no path to the read-out position. All 30 predicted zeros matched exactly on a 6-token prompt,
-and position-major storage does not match. A cheap check that your indexing is right.
-
-**Error at the final token position is usually the largest**, not zero. (An earlier version of this
-README claimed the opposite; that was an artefact of the logit mis-ordering above.) On four pilot
-prompts the final position held 0.04–0.17 of total error, exceeding every interior position, and
-about 60% of total error on one of them. The method's blind spot is largest at the position the
-model reads its answer from.
-
-**`max_feature_nodes` changes the graph when it binds.** At 8192, prompts above ~10 tokens saturate
-the cap, and truncated features' contribution is absorbed elsewhere. Replacement and completeness
-were barely affected (0.783 → 0.780, 0.944 → 0.948); the error decomposition was not. Since prompt
-length is unevenly distributed across categories, an unnoticed cap could produce a spurious
-category effect, so this project rejects any saturating graph with an exception rather than
-recording it. The finer claim about *where* saturation adds error was diagnosed with the
-since-corrected implementation and is withdrawn.
-
-**Argument order.** The installed `attribute()` signature is `(prompt, model, ...)`, not the
-documented `(model, prompt)`. Call with keywords. Also `graph.logit_tokens` is deprecated in favour
-of `graph.logit_token_ids`.
-
-**`prune_graph` dominates runtime.** At four thresholds it took 115 s of a 172 s per-graph total.
-A node-influence threshold curve — how many nodes are needed to reach each cumulative share of
-logit influence — ranks graphs identically: Spearman 1.000, 1.000, 1.000, 0.994 at thresholds 0.95,
-0.9, 0.8, 0.7 across 32 graphs. Negligible cost.
-
-**Re-attribution noise.** Attributing the same prompt twice varies replacement score by a median of
-9e-05, up to 3.4e-04, and this does not scale simply with graph size. Graph *structure* is fully
-deterministic — node counts are identical across runs; only the bf16 arithmetic wobbles. Set
-regression-test tolerances accordingly.
-
-**Disk.** The weights are 17.2 GB legitimately (9.8 GB model, 7.4 GB transcoders) against Kaggle's
-20 GB quota, and a single 13,000-node graph saves at ~685 MB. Metrics-only storage is not a
-preference here, it is the only option.
-
-## Repository layout
+## Layout
 
 ```
 notebooks/
-  day1_final.ipynb              environment, frozen config, metric validation, timing
-  day2_final_v2.ipynb           corpus generation, length balance, category validation
-  day3_corpus_run.ipynb         opening checks and the resumable corpus loop
+  day1_final.ipynb                 environment, frozen config, metric validation, timing
+  day2_final_v2.ipynb              corpus generation, length balance, category validation
+  day3_corpus_run.ipynb            opening checks and the resumable corpus loop
   day5_rating_three_streams.ipynb  practice, blind rating, and the two LLM streams
-                                (committed before any rating was performed)
-ct_utils.py                     the metric pipeline, shared by every notebook
-preregistration.md              written before data collection, append-only
-data/
-  corpus.csv                    255 prompts with cheap predictors and task success
-  corpus_meta.json              generation settings, per-category counts, check results
-  results.csv                   per-graph metrics for all 255
-  day1_config.json              frozen settings, package versions, noise floor
-  day3_config.json              run summary and check outcomes
-  check_*.csv                   manipulation checks: induction, entity, syntax, answer mode,
-                                forced choice (failed), model consistency
-  pruning_agreement.csv         node-count curve vs the library's pruning curve
-  calibration.json              rating criteria, fixed after practice and before rating
-  rating_manifest.csv           the 50 presentations, in order, with no metric columns
-  graph_texts.jsonl             the exact text shown for each presentation
-  ratings_*.jsonl               ratings and written reasons, per stream
-  llm_batch_plan.json           batch assignment for the LLM streams, and any swaps made
+                                   (committed before any rating was performed)
+  day6_confirmatory_analysis.ipynb the five registered tests, then the exploratory section
+  day7_direct_path_exact.ipynb     exact direct/mediated split on the full unthresholded graph
+ct_utils.py          the metric pipeline, shared by every notebook
+circuit_view.py      the graph viewer used for the human rating
+preregistration.md   written before data collection, append-only, 30+ deviation entries
+NOTES.md             environment findings and gotchas
+data/                corpus, per-graph metrics, manipulation checks, calibration, rating
+                     manifest, the exact text shown per presentation, all three rating
+                     streams with written reasons, exact direct/mediated split
+analysis/            the five tests against their thresholds; exploratory results with
+                     BH-adjusted p-values
 ```
 
-Rating outputs appear once the rating is complete; the manifest and calibration are committed
-beforehand, so the sample and the criteria are on record before any graph was seen.
-
-Notebooks are committed without outputs. The numbers they produced live in `data/` and in the
-deviations log of `preregistration.md`.
-
-## Method notes
-
-Metrics reproduce the library's own `compute_graph_scores` exactly — agreement to 1.1e-06 on the
-same graph, verified on the reference prompt and on the largest graph in the corpus — while also
-recording the per-(layer, position) error decomposition, which the library's scalar metrics do not
-expose. That decomposition is this project's distinctive measurement.
-
-Computation runs on the GPU in float32. The influence vector is obtained by iterating the Neumann
-series rather than inverting `(I − A)`: the graph is a DAG, so the series terminates exactly, and
-iteration is far cheaper at 10,000+ nodes. Two assertions guard the pipeline — mass conservation,
-since all backward influence must be absorbed at nodes with no inputs and there are only two such
-kinds, and early series termination, since a non-terminating series means the adjacency is
-transposed.
-
-`circuit_view.py` is the viewer used for the human rating and is part of the method: the rating
-asks whether a person can read a graph, so what they were shown matters. Edge selection there is
-top-k first and threshold second — weights are row-normalised, so a high fan-in node (the logit has
-thousands of incoming edges) has tiny weights throughout, and a fixed threshold empties the graph.
-
-An earlier implementation disagreed with the library by ~0.008. That was traced to the logit
-mis-ordering described above rather than to a difference of method, and is documented in the
-deviations log.
-
-## Results so far
-
-**Corpus run.** 255 prompts, 8 categories, all attributed successfully on a free Kaggle T4. Mean
-18.1 s per graph, 72 minutes total, peak 12.5 GB GPU. No feature-cap saturation, no out-of-memory
-failures, no BOS structural-zero violations, no category lost prompts.
-
-**Model consistency.** Top-1 predictions agree between the attribution model and the model used for
-the cheap predictors on 24/24 pre-registered check prompts and on 97.6% of the full corpus; the six
-disagreements are listed in `data/check_top1_disagreements.csv`.
-
-Outcome distributions are deliberately not reported here until the blind human rating is complete.
-
-## Scope limits
-
-- One model, one size, one dictionary family. Results may differ at 9B, and cross-layer
-  transcoders score substantially better than the per-layer ones used here (published: 0.61 vs 0.37
-  replacement).
-- bf16, not fp32. T4, not A100.
-- **These metrics measure whether a graph *covers* the computation, not whether it covers it
-  *correctly*.** Mechanistic faithfulness — whether the transcoder uses the same mechanism as the
-  MLP or merely something correlated with its output — requires per-graph intervention experiments
-  and is out of scope. This is the deepest limitation.
-- Prompt categories are hand-defined and not exhaustive.
-- Human validation is **single-rater** and not blind to the project's hypotheses. The 10 duplicates
-  measure intra-rater consistency; inter-rater reliability is not measured. Agreement with the LLM
-  rater is not a substitute — it sees the text only and applies the human rater's own written
-  rubric, so it tests whether the criteria are articulable, not whether they are shared.
-- Feature descriptions are Neuronpedia's automated explanations: they describe what a feature fires
-  on, not what it computes, so a misleading label could push a rating either way.
+Notebooks are committed without outputs; the numbers live in `data/`, `analysis/`, and the deviations
+log.
 
 ## Credits
 
-Method and metrics: Ameisen, Lindsey, Pearce, Gurnee et al., Anthropic.
-Library: [`circuit-tracer`](https://github.com/safety-research/circuit-tracer), Hanna, Piotrowski,
-Lindsey, Ameisen (Anthropic / Decode Research).
-Transcoders: GemmaScope.
+Method and metrics: Ameisen, Lindsey, Pearce, Gurnee et al., Anthropic. Library:
+[`circuit-tracer`](https://github.com/safety-research/circuit-tracer) (Hanna, Piotrowski, Lindsey,
+Ameisen — Anthropic / Decode Research). Transcoders: GemmaScope. Feature descriptions: Neuronpedia.
+
+Corpus construction, analysis and the write-up were carried out in extended collaboration with Claude
+(Anthropic), including the rating criteria and two of the three rating streams. The dependence this
+creates is disclosed above and in `preregistration.md` (D3.11).
 
 ## Licence
 
-MIT for code. The corpus is released alongside it.
+MIT, see [LICENSE](LICENSE). The corpus is released under the same terms.
