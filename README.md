@@ -25,12 +25,7 @@ are useful *"to flag prompts our method performs poorly on"* — then never deve
 reported as dataset-wide averages for comparing dictionaries, never as a per-prompt instrument, and
 nobody had tested whether they predict a human's success at reading a particular graph.
 
-**Why the metric behaves as it does:** influence is pushed backwards from the logits and can only
-terminate at a node with no inputs — a token embedding or an error node. So **replacement score is
-the embedding share**. But a token's embedding enters the residual stream at layer 0 and is never
-removed, so the unembedding can read it at layer 25 with no feature in between. That mass counts
-toward replacement while explaining nothing. The metric measures **coverage**, and coverage is
-easiest when there is little computation to cover.
+Replacement score is the embedding share: influence pushed backwards from the logits can only terminate at a node with no inputs, and there are exactly two kinds — token embeddings and error nodes. One consequence is that a token's embedding enters the residual stream at layer 0 and is never removed, so mass can reach the logit with no feature in between and still count toward replacement. That path turns out to be small — 9.5%, measured exactly, and diluted by the normalisation denominators along the way — so it is not why the metric misbehaves. What matters is the framing: replacement measures coverage, and coverage is easiest when there is little computation to cover. Induction is the clean case.
 
 ## Findings
 
