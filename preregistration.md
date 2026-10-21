@@ -870,3 +870,23 @@ Due to my reflections made on the rating process and the uncertainty of my ratin
 Intra-rater quadratic weighted kappa on 10 unmarked duplicates: human 0.889 (9/10 exact, the single disagreement adjacent), LLM 0.762, assistant 1.000 (not comparable — its duplicate pairs shared a context window). The human figure exceeds the 0.6 threshold in section 5, so P5 is reported as interpretable.
 
 **Presentation 1: recorded rating does not match the stated reason.** The written reason concludes "FINAL answer: 0" while the recorded rating is 1 — a transcription error at the first presentation. The rating was not revised, since revising after the analysis would be worse than the error. The effect is bounded: recomputing P5 with presentation 1 as 0 gives Spearman +0.217 (p = 0.180) against the recorded +0.243 (p = 0.132). The prediction |rho| < 0.4 holds under both.
+
+**Day 8b — does the length effect survive a cross-layer transcoder? [21-10-2026]**
+(note pasted after the experiment was run - but was not changed)
+
+One question. Replacement score rose with frame length in 27 of 27 matched short/long pairs on GemmaScope per-layer transcoders. Does it still rise with a cross-layer transcoder?
+
+Nothing else is re-run. No re-rating, no new corpus, no confirmatory tests. The 40 human ratings are per-layer-specific and P5 is unchanged.
+
+Pre-registered predictions, before any transcoder is loaded
+Prediction	Threshold
+C0	The length effect replicates on a second model with per-layer transcoders	≥ 24 of the matched pairs positive
+C1	It survives the cross-layer transcoder	≥ 24 of the matched pairs positive
+C2	The per-token slope is smaller under the CLT on the same model	CLT slope < PLT slope
+C3	Absolute replacement is higher under the CLT	CLT mean > PLT mean, same prompts
+C4	Mean path length is shorter under the CLT	CLT mean < PLT mean, same prompts
+C2 is the bet the feature-count analysis implies: if about half the Gemma slope was feature count, and the CLT changes how features are organised, the slope should move. C3 and C4 check the CLT behaves as the literature reports (published 0.61 vs 0.37 replacement, 2.3 vs 3.7 hops) — if they fail, suspect the setup before the finding.
+
+If C0 fails, the length effect is Gemma-specific and C1 is uninterpretable. If C1 fails, the effect is dictionary-dependent and the write-up's claim that it "follows from the residual stream and should be dictionary-independent" is withdrawn. If C1 holds and C2 fails, the feature-count reading weakens and the residual-stream reading strengthens.
+**C0 diagnostic.** The token manipulation is identical across models (+4.78 tokens both), so the weaker Llama effect is not a smaller manipulation. Feature density differs: 930 features per added token on Gemma against 547 on Llama (ratio 1.70), while the raw effect differs by 3.55×. Normalising by features added reduces the gap to 2.09×, so feature count accounts for roughly 34–42% of the cross-model difference — independently reproducing the within-Gemma estimate that about half the length coefficient is feature count. Because the token delta is pinned across arms while density varies, the arms provide the independent variation in feature count at fixed token count that the matched-frame design could not, and which was listed as required future work.
+**gemma-clt not feasible on free compute [21-10-2026].** Cross-layer attribution works only on the TransformerLens backend; the nnsight backend raises MissedProviderError on cross-layer decoders, because a CLT decoder writes into several downstream layers and the backend’s hook injection misses a module. TransformerLens holds decoders in CPU RAM and streams them to the device, so the 426k Gemma CLT needs 28.5 GB of transcoders plus 5.2 GB of bf16 model = 33.7 GB against Kaggle’s 31.5 GB available — short by 2.1 GB. lazy_decoder=True is already the default. The only backend supporting CLTs is the one that cannot fit Gemma’s CLT in RAM. Requires ≥48 GB RAM; the GPU is not the constraint (the 20.4 GB Llama CLT peaked at 7.0 GB VRAM). The dictionary question is therefore answered on Llama-3.2-1B only, which matters because C0 already showed the length effect is strongly model-dependent: a CLT result on Llama does not transfer to Gemma, and the write-up must say so.
