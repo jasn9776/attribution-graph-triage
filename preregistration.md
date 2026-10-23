@@ -922,3 +922,22 @@ Not reproduced on this model, and remaining Gemma-only validations: syntactic ag
 D9.4 What Day 9 cannot settle
 
 Whether induction graphs are uninformative to a human on Llama. No ratings exist for this model, so only the replacement ranking is testable. If induction ranks top again, the coverage argument — coverage is easiest where there is least computation to cover — generalises beyond Gemma; if it does not, the inversion is Gemma-specific. The human half of that finding stays untested outside Gemma-2-2B, and P5 stays a Gemma per-layer result.
+
+D9.3 amendment, before the corpus run. The validity checks were run on Llama-3.2-1B. Induction
+passes (so D3 is a live test of the inversion), as do arithmetic, multi-hop and
+known/unknown entity. The entity check replicates more cleanly than on Gemma: round birth years
+3/16 known vs 15/16 unknown, Fisher p = 3.9×10⁻⁵, against 5/16 vs 16/16 and p = 6.8×10⁻⁵ on
+Gemma. A Day 2 manipulation check designed on one model reproducing on another is unplanned
+evidence that the category construction is sound, and is recorded as such.
+
+factual_recall fails the pooled 0.70 gate at 0.675, but the failure is entirely the medium frame
+format: capital_short 12/12, capital_long 11/12, sport_short 3/4, capital_med 1/12.
+Restricted to short and long frames the rate is 26/28 = 0.93. The category is therefore treated as
+valid, with the medium frames recorded as a Llama-specific format failure — the same one that
+made the three-frame Friedman trend unavailable in Day 8. Those prompts are retained in the primary
+pass and removed by the task filter in the secondary pass.
+
+syntactic_agreement has no validity evidence on this model. Its expected field is empty, so
+the generic answer-rate test cannot assess it, and the Gemma check (verb-logit margins, 18/18) was
+not reproduced. It is still ranked in D3 and D4; that gap is a known weakness in those two tests
+rather than an untested possibility.
