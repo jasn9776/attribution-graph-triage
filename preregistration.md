@@ -890,3 +890,35 @@ C2 is the bet the feature-count analysis implies: if about half the Gemma slope 
 If C0 fails, the length effect is Gemma-specific and C1 is uninterpretable. If C1 fails, the effect is dictionary-dependent and the write-up's claim that it "follows from the residual stream and should be dictionary-independent" is withdrawn. If C1 holds and C2 fails, the feature-count reading weakens and the residual-stream reading strengthens.
 **C0 diagnostic.** The token manipulation is identical across models (+4.78 tokens both), so the weaker Llama effect is not a smaller manipulation. Feature density differs: 930 features per added token on Gemma against 547 on Llama (ratio 1.70), while the raw effect differs by 3.55×. Normalising by features added reduces the gap to 2.09×, so feature count accounts for roughly 34–42% of the cross-model difference — independently reproducing the within-Gemma estimate that about half the length coefficient is feature count. Because the token delta is pinned across arms while density varies, the arms provide the independent variation in feature count at fixed token count that the matched-frame design could not, and which was listed as required future work.
 **gemma-clt not feasible on free compute [21-10-2026].** Cross-layer attribution works only on the TransformerLens backend; the nnsight backend raises MissedProviderError on cross-layer decoders, because a CLT decoder writes into several downstream layers and the backend’s hook injection misses a module. TransformerLens holds decoders in CPU RAM and streams them to the device, so the 426k Gemma CLT needs 28.5 GB of transcoders plus 5.2 GB of bf16 model = 33.7 GB against Kaggle’s 31.5 GB available — short by 2.1 GB. lazy_decoder=True is already the default. The only backend supporting CLTs is the one that cannot fit Gemma’s CLT in RAM. Requires ≥48 GB RAM; the GPU is not the constraint (the 20.4 GB Llama CLT peaked at 7.0 GB VRAM). The dictionary question is therefore answered on Llama-3.2-1B only, which matters because C0 already showed the length effect is strongly model-dependent: a CLT result on Llama does not transfer to Gemma, and the write-up must say so.
+
+**Day 9 — category results on a second model [23-10-2026] — REGISTERED, NOT YET RUN**
+
+Written before the corpus run begins. Exploratory in status, but the predictions below are replications of confirmatory predictions (P1, P2, P4), which have never been tested outside Gemma-2-2B. Nothing has been attributed on Llama beyond the 27 matched frames at the time of writing.
+
+D9.1 Design
+
+The full 255-prompt corpus on Llama-3.2-1B with per-layer transcoders (mntss/transcoder-Llama-3.2-1B), TransformerLens backend, n_layers = 16, the same attr_kwargs as the corpus run. The per-layer arm is the like-for-like comparison with the Gemma corpus run; a cross-layer arm may follow.
+
+D9.2 Predictions
+	Prediction	Threshold	Gemma value
+D1	replacement's between-category range stays small	range < 0.15 (P2's first criterion)	0.036 ✓
+D2	category still explains more than a fifth of the variance	eta² ≥ 0.20 (P2's second criterion)	0.238
+D3	the induction inversion replicates	induction in the top 3 of 8 by mean replacement	rank 1 of 8
+D4	the documented failure modes still fail to predict the ranking	|Spearman| < 0.4 against D3.6's order	+0.071
+D5	completeness is still less discriminative than replacement	completeness range < replacement range (P4)	0.008 vs 0.036 ✓
+
+Interpretation, fixed now. If D1 and D2 both hold, P2's split verdict replicates and the central claim — that the metric is statistically structured and practically flat at once — is a property of the method rather than of Gemma-2-2B. If D3 fails, the induction inversion is Gemma-specific and the write-up's framing of it needs the same qualification the length effect's did. If D4 fails, the ranking is predictable on this model, which would be the most surprising outcome available and would mean the documented failure modes do describe some models.
+
+The Spearman correlation between the Gemma and Llama category rankings is also reported: high agreement means category effects are a property of the method, low means they are model-specific the way the length effect turned out to be.
+
+D9.3 Validity gating, fixed before the run
+
+Every category claim in this corpus was validated on Gemma-2-2B — 24/24 strict nonce copying for induction, 18/18 verb-logit margins for syntactic agreement, round birth years 5/16 known vs 16/16 unknown (Fisher p = 6.8×10⁻⁵). None of it transfers automatically, and Llama already answers 71% of the matched frames and 0% of the medium ones.
+
+Before any attribution, the checks that can be re-run are re-run on this model (generation only): the answer rate per category for every prompt with a defined expected answer, and the entity round-year Fisher test. A category whose answer rate falls below 0.70, or which fails its own check, is excluded from D3 and D4 and reported separately, because ranking categories that are not engaging the mechanism they are named for is not a test of anything. Failing categories are still attributed and reported — a graph explains whatever the model actually did.
+
+Not reproduced on this model, and remaining Gemma-only validations: syntactic agreement by verb-logit margin, and the obfuscation entropy ladder.
+
+D9.4 What Day 9 cannot settle
+
+Whether induction graphs are uninformative to a human on Llama. No ratings exist for this model, so only the replacement ranking is testable. If induction ranks top again, the coverage argument — coverage is easiest where there is least computation to cover — generalises beyond Gemma; if it does not, the inversion is Gemma-specific. The human half of that finding stays untested outside Gemma-2-2B, and P5 stays a Gemma per-layer result.
